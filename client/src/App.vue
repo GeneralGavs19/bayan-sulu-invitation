@@ -403,10 +403,15 @@ export default {
           { responseType: 'blob' }
         );
 
+        // Determine file extension based on content type
+        const contentType = response.headers['content-type'] || '';
+        const isSvg = contentType.includes('svg') || contentType.includes('xml');
+        const extension = isSvg ? 'svg' : 'png';
+        
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `invitation-${this.formData.name.replace(/\\s+/g, '_')}.png`);
+        link.setAttribute('download', `invitation-${this.formData.name.replace(/\\s+/g, '_')}.${extension}`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -472,8 +477,6 @@ export default {
         ? `<p class="status-text">✓ ВЫ ПОДТВЕРДИЛИ СВОЕ УЧАСТИЕ</p>
            <p>Спасибо за ответ!<br>Приглашение отправлено на ${this.formData.email}</p>
            <div class="details" style="margin-top: 20px;">
-             <p style="margin: 5px 0;">📅 <strong>15 апреля 2026 года</strong></p>
-             <p style="margin: 5px 0;">📍 <a href="https://2gis.kz/astana/geo/70000001068734198" style="color: #D4A5A5;">Место проведения на 2GIS</a></p>
              <p style="margin: 5px 0; font-size: 12px; color: #B399A3; font-style: italic;">⚠️ Проверьте папку "Спам" / Spam</p>
            </div>`
         : `<p class="status-text not-attending">✗ ВЫ СООБЩИЛИ О НЕВОЗМОЖНОСТИ ПРИЕХАТЬ</p>
