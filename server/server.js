@@ -3,15 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
-// Try to import sharp, make it optional for Railway deployment
-let sharp;
-try {
-  const sharpModule = await import('sharp');
-  sharp = sharpModule.default;
-  console.log('✓ Sharp loaded successfully');
-} catch (e) {
-  console.log('⚠️ Sharp not available, PNG generation will fall back to SVG');
-}
 
 dotenv.config();
 
@@ -252,7 +243,15 @@ app.post('/api/invitations/generate-image', async (req, res) => {
     const svgContent = generateInvitationSVG(name, willAttend);
     const buffer = Buffer.from(svgContent);
 
-    // Try to convert to PNG, fallback to SVG
+    // Try to convert to PNG using sharp, fallback to SVG
+    let sharp;
+    try {
+      const sharpModule = await import('sharp');
+      sharp = sharpModule.default;
+    } catch (e) {
+      // Sharp not available, will fallback to SVG
+    }
+    
     if (sharp) {
       try {
         const pngBuffer = await sharp(buffer).png().toBuffer();
