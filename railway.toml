@@ -1,8 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd server && npm install && echo 'Build v2 04:15'"
-
-[deploy]
-startCommand = "cd server && npm start"
-healthcheckPath = "/health"
-restartPolicyType = "on-failure"
