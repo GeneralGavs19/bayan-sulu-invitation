@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "RESEND_API_KEY": "@resend_api_key", 
+    "EMAIL_FROM": "@email_from",
+    "FRONTEND_URL": "@frontend_url"
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Баян Сулу Приглашение | Bayan Sulu Invitation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Georgia', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #F0E6D2 0%, #E8D5C4 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background Pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(212, 165, 165, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 80% 80%, rgba(179, 153, 163, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 40% 20%, rgba(244, 212, 200, 0.08) 2px, transparent 2px);
+      background-size: 50px 50px, 80px 80px, 100px 100px;
+      background-position: 0 0, 10px 10px, 20px 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Decorative shapes */
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -100px;
+      right: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(212, 165, 165, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
