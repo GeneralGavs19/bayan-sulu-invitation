@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Invitation website for Bayan Sulu celebration",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
+    "start": "cd server && npm start",
     "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
     "build": "npm --prefix client run build && npm --prefix server run build",
     "server": "cd server && npm run dev",
@@ -11,5 +15,8 @@
   },
   "keywords": ["invitation", "event", "celebration"],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
