@@ -193,6 +193,9 @@
               <template v-if="formData.willAttend">
                 <p class="attending-response">✓ ВЫ ПОДТВЕРДИЛИ СВОЕ УЧАСТИЕ</p>
                 <p>Приглашение отправлено на {{ formData.email }}</p>
+                <p style="color: #8B7355; font-size: 13px; margin-top: 8px;">📅 15 апреля 2026 года</p>
+                <p style="color: #8B7355; font-size: 13px;">📍 <a href="https://2gis.kz/astana/geo/70000001068734198" target="_blank" style="color: #D4A5A5; text-decoration: underline;">Посмотреть место на 2GIS</a></p>
+                <p style="color: #B399A3; font-size: 12px; margin-top: 10px; font-style: italic;">⚠️ Письмо может попасть в спам — проверьте папку "Спам" / Spam</p>
                 <p>Waiting for you! 🎉</p>
               </template>
               <template v-else>
@@ -455,9 +458,14 @@ export default {
     getInvitationHTML() {
       const footerContent = this.formData.willAttend
         ? `<p class="status-text">✓ ВЫ ПОДТВЕРДИЛИ СВОЕ УЧАСТИЕ</p>
-           <p>Спасибо за ответ!<br>Приглашение отправлено на ${this.formData.email}</p>`
+           <p>Спасибо за ответ!<br>Приглашение отправлено на ${this.formData.email}</p>
+           <div class="details" style="margin-top: 20px;">
+             <p style="margin: 5px 0;">📅 <strong>15 апреля 2026 года</strong></p>
+             <p style="margin: 5px 0;">📍 <a href="https://2gis.kz/astana/geo/70000001068734198" style="color: #D4A5A5;">Место проведения на 2GIS</a></p>
+             <p style="margin: 5px 0; font-size: 12px; color: #B399A3; font-style: italic;">⚠️ Проверьте папку "Спам" / Spam</p>
+           </div>`
         : `<p class="status-text not-attending">✗ ВЫ СООБЩИЛИ О НЕВОЗМОЖНОСТИ ПРИЕХАТЬ</p>
-           <p>Ваш ответ принят (письмо не отправляется)<br>Your response has been recorded</p>`;
+           <p>Ваш ответ принят<br>Your response has been recorded</p>`;
 
       return `
         <!DOCTYPE html>
@@ -1313,47 +1321,151 @@ body {
 /* Extra small devices */
 @media (max-width: 480px) {
   body {
-    padding: 10px;
+    padding: 5px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
   }
   
   .title {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    margin-bottom: 5px;
   }
   
   .subtitle {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
   }
   
   .form-container,
   .success-container,
   .admin-container {
-    padding: 15px;
-    border-radius: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
   }
   
   .form-title,
   .success-title,
   .admin-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 12px;
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"] {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .radio-group {
+    gap: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .radio-label {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    margin-top: 5px;
   }
   
   .invitation-preview {
-    padding: 15px;
-    border-radius: 15px;
+    padding: 10px;
+    border-radius: 10px;
   }
   
   .invitation-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+  
+  .event-name {
+    font-size: 1.5rem;
+    margin: 5px 0 10px;
   }
   
   .invitation-name {
-    font-size: 1.2rem;
-    padding: 15px;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 10px 0;
   }
   
   .decorative {
-    font-size: 1rem;
-    letter-spacing: 4px;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    margin: 10px 0;
+  }
+  
+  .invitation-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  
+  .attending-response, .not-attending-response {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  
+  .actions {
+    gap: 6px;
+    margin-top: 12px;
+  }
+  
+  .header-decoration {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+}
+
+/* Ultra compact for very small screens */
+@media (max-width: 360px) {
+  body {
+    padding: 3px;
+  }
+  
+  .title {
+    font-size: 1.2rem;
+  }
+  
+  .form-container,
+  .success-container {
+    padding: 8px;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"] {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .invitation-name {
+    font-size: 0.9rem;
+  }
+  
+  .decorative {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
   }
 }
 </style>
