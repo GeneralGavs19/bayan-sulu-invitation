@@ -409,9 +409,10 @@ export default {
         link.setAttribute('download', `invitation-${this.formData.name.replace(/\\s+/g, '_')}.png`);
         document.body.appendChild(link);
         link.click();
-        link.parentNode.removeChild(link);
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
       } catch (error) {
-        this.error = 'Ошибка скачивания картинки: ' + error.message;
+        this.error = 'Ошибка скачивания: ' + (error.response?.data?.message || error.message);
         console.error('Download PNG error:', error);
       }
     },
