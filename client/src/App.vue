@@ -124,7 +124,7 @@
           </div>
 
           <div class="form-group">
-            <label>Вы придете? / Will you attend?</label>
+            <label>Вы придете? / Will you come?</label>
             <div class="radio-group">
               <label class="radio-option">
                 <input
