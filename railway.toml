@@ -1,8 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd server && npm ci && echo 'Fresh build v4:37'"
-
-[deploy]
-startCommand = "cd server && npm start"
-healthcheckPath = "/health"
-restartPolicyType = "on-failure"
