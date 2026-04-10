@@ -1203,4 +1203,140 @@ body {
   opacity: 0;
   transform: translateY(-20px);
 }
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+    max-width: 100%;
+  }
+  
+  .title {
+    font-size: 2rem;
+    letter-spacing: 2px;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .form-container,
+  .success-container,
+  .admin-container {
+    padding: 20px;
+    margin: 10px 0;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"] {
+    padding: 12px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .radio-label {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .submit-button,
+  .download-button,
+  .share-button {
+    padding: 14px 24px;
+    font-size: 0.95rem;
+  }
+  
+  .invitation-preview {
+    padding: 20px;
+  }
+  
+  .invitation-title {
+    font-size: 1.5rem;
+  }
+  
+  .invitation-name {
+    font-size: 1.3rem;
+  }
+  
+  .decorative {
+    font-size: 1.2rem;
+  }
+  
+  .admin-title {
+    font-size: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .response-card {
+    padding: 15px;
+  }
+  
+  .response-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .back-link {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
+  .title {
+    font-size: 1.6rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .form-container,
+  .success-container,
+  .admin-container {
+    padding: 15px;
+    border-radius: 15px;
+  }
+  
+  .form-title,
+  .success-title,
+  .admin-title {
+    font-size: 1.3rem;
+  }
+  
+  .invitation-preview {
+    padding: 15px;
+    border-radius: 15px;
+  }
+  
+  .invitation-title {
+    font-size: 1.3rem;
+  }
+  
+  .invitation-name {
+    font-size: 1.2rem;
+    padding: 15px;
+  }
+  
+  .decorative {
+    font-size: 1rem;
+    letter-spacing: 4px;
+  }
+}
 </style>
