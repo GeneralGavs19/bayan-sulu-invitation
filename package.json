@@ -12,8 +12,7 @@
     "build": "echo 'Root build skipped (deploy client separately or use client:build)'",
     "client:build": "cd client && npm run build",
     "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
-    "postinstall": "chmod +x client/node_modules/.bin/vite || true"
+    "client": "cd client && npm run dev"
   },
   "keywords": ["invitation", "event", "celebration"],
   "author": "",
