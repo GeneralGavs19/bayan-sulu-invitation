@@ -506,9 +506,10 @@ function generateInvitationSVG(name, willAttend) {
   const height = 850;
   const centerX = width / 2;
   
-  // Generate barcode-like pattern for ticket authenticity
-  const barcodePattern = Array.from({length: 30}, (_, i) => 
-    `<rect x="${60 + i * 12}" y="780" width="${Math.random() > 0.5 ? 6 : 3}" height="40" fill="#8B7355"/>`
+  // Generate barcode-like pattern for ticket authenticity (centered, smaller)
+  const barcodeStartX = 100;
+  const barcodePattern = Array.from({length: 25}, (_, i) => 
+    `<rect x="${barcodeStartX + i * 12}" y="750" width="${Math.random() > 0.5 ? 5 : 3}" height="35" fill="#8B7355"/>`
   ).join('');
 
   return `
@@ -577,19 +578,19 @@ function generateInvitationSVG(name, willAttend) {
       <text x="${centerX}" y="540" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>
       
       <!-- Decorative divider -->
-      <line x1="100" y1="580" x2="${width-100}" y2="580" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
-      <text x="${centerX}" y="600" font-size="20" text-anchor="middle" fill="#D4A5A5">❦ ❦ ❦</text>
+      <line x1="100" y1="570" x2="${width-100}" y2="570" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
+      <text x="${centerX}" y="590" font-size="20" text-anchor="middle" fill="#D4A5A5">❦ ❦ ❦</text>
       
       <!-- Instructions -->
-      <text x="${centerX}" y="635" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Предъявите это приглашение при входе</text>
-      <text x="${centerX}" y="655" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Please present this invitation at the entrance</text>
+      <text x="${centerX}" y="620" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Предъявите это приглашение при входе</text>
+      <text x="${centerX}" y="640" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Please present this invitation at the entrance</text>
       
       <!-- Barcode Section -->
-      <text x="${centerX}" y="705" font-size="10" text-anchor="middle" fill="#8B7355" font-family="monospace">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
+      <text x="${centerX}" y="700" font-size="10" text-anchor="middle" fill="#8B7355" font-family="monospace">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
       ${barcodePattern}
       
       <!-- Bottom text -->
-      <text x="${centerX}" y="${height-35}" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026 • Благодарим за ответ!</text>
+      <text x="${centerX}" y="${height-45}" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026 • Благодарим за ответ!</text>
     </svg>
   `;
 }
