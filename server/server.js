@@ -93,12 +93,12 @@ async function sendEmailViaResend(to, subject, html, text) {
 
 // Routes
 
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ status: 'Server is running' });
 });
 
 // Admin login
-app.post('/api/admin/login', (req, res) => {
+app.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
 
   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
@@ -118,7 +118,7 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 // Submit invitation response
-app.post('/api/invitations/submit', async (req, res) => {
+app.post('/invitations/submit', async (req, res) => {
   try {
     const { name, willAttend, email, eventKey } = req.body;
 
@@ -179,7 +179,7 @@ app.post('/api/invitations/submit', async (req, res) => {
 });
 
 // Get responses count
-app.get('/api/invitations/stats', async (req, res) => {
+app.get('/invitations/stats', async (req, res) => {
   try {
     const collection = db.collection('responses');
     const total = await collection.countDocuments();
@@ -199,7 +199,7 @@ app.get('/api/invitations/stats', async (req, res) => {
 });
 
 // Admin: Get all responses
-app.get('/api/admin/responses', async (req, res) => {
+app.get('/admin/responses', async (req, res) => {
   try {
     const collection = db.collection('responses');
     const responses = await collection
@@ -218,7 +218,7 @@ app.get('/api/admin/responses', async (req, res) => {
 });
 
 // Admin: Delete a response
-app.delete('/api/admin/responses/:id', async (req, res) => {
+app.delete('/admin/responses/:id', async (req, res) => {
   try {
     const collection = db.collection('responses');
     const result = await collection.deleteOne({
@@ -237,7 +237,7 @@ app.delete('/api/admin/responses/:id', async (req, res) => {
 });
 
 // Generate invitation image (PNG)
-app.post('/api/invitations/generate-image', async (req, res) => {
+app.post('/invitations/generate-image', async (req, res) => {
   try {
     const { name, willAttend } = req.body;
 
@@ -493,7 +493,7 @@ function generateInvitationSVG(name, willAttend) {
 
 // SPA Fallback - serve index.html for all non-API routes
 app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
+  if (!req.path.startsWith('/health') && !req.path.startsWith('/admin') && !req.path.startsWith('/invitations')) {
     return res.sendFile(path.join(__dirname, '../client/dist/index.html'));
   }
   res.status(404).json({ error: 'Not found' });
