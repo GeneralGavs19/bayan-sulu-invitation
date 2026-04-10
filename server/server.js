@@ -3,7 +3,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
-import sharp from 'sharp';
+// Try to import sharp, make it optional for Railway deployment
+let sharp;
+try {
+  const sharpModule = await import('sharp');
+  sharp = sharpModule.default;
+  console.log('✓ Sharp loaded successfully');
+} catch (e) {
+  console.log('⚠️ Sharp not available, PNG generation will fall back to SVG');
+}
 
 dotenv.config();
 
@@ -244,13 +252,21 @@ app.post('/api/invitations/generate-image', async (req, res) => {
     const svgContent = generateInvitationSVG(name, willAttend);
     const buffer = Buffer.from(svgContent);
 
-    // Convert SVG to PNG using sharp
-    const pngBuffer = await sharp(buffer)
-      .png()
-      .toBuffer();
-
-    res.type('image/png');
-    res.send(pngBuffer);
+    // Try to convert to PNG, fallback to SVG
+    if (sharp) {
+      try {
+        const pngBuffer = await sharp(buffer).png().toBuffer();
+        res.type('image/png');
+        res.send(pngBuffer);
+        return;
+      } catch (err) {
+        console.log('⚠️ PNG conversion failed, returning SVG:', err.message);
+      }
+    }
+    
+    // Fallback: return SVG
+    res.type('image/svg+xml');
+    res.send(svgContent);
   } catch (error) {
     console.error('Image generation error:', error);
     res.status(500).json({ error: 'Failed to generate image' });
