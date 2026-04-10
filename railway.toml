@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "echo 'Build starting at $(date)' && cd server && npm install"
+
+[deploy]
+startCommand = "cd server && npm start"
+healthcheckPath = "/health"
+restartPolicyType = "on-failure"
