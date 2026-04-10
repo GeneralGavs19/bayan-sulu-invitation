@@ -282,6 +282,49 @@ app.post('/invitations/generate-image', async (req, res) => {
 
 // Helper function to generate invitation HTML with pastel colors
 function generateInvitationHTML(name, willAttend) {
+  const attendingContent = `
+          <div class="greeting">
+            <p>Уважаемый (ая) гость!</p>
+            <p>С честью приглашаем Вас принять участие в праздновании торжественного события.</p>
+          </div>
+          
+          <div class="event-details">
+            <p>🎊 <strong>Праздник красоты и радости</strong></p>
+            <p>📅 <strong>15 апреля 2026 года</strong></p>
+            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" class="location-link">Посмотреть место проведения →</a></p>
+            <p>⏰ Приготовьтесь к незабываемому вечеру!</p>
+          </div>
+          
+          <div class="footer">
+            <p>Спасибо, что приняли наше приглашение!</p>
+            <p>Thank you for accepting our invitation!</p>
+            <p style="margin-top: 15px;">С нетерпением ждем встречи с вами.</p>
+            <p style="margin-top: 5px;">We look forward to celebrating with you! 🎉</p>
+          </div>`;
+
+  const notAttendingContent = `
+          <div class="greeting" style="background: #F4D4C8; padding: 20px; border-radius: 10px; margin: 25px 0;">
+            <p style="color: #8B5A45; font-weight: bold; font-size: 16px;">😔 К сожалению, Вы не сможете присутствовать</p>
+            <p style="color: #8B7355; margin-top: 15px;">Мы будем скучать по Вам!</p>
+          </div>
+          
+          <div class="event-details" style="background: #FFF5F0; border: 2px dashed #D4A5A5;">
+            <p style="color: #8B5A45; font-weight: bold; margin-bottom: 15px;">Пожалуйста, сообщите нам:</p>
+            <p>📝 Причину, по которой не сможете приехать</p>
+            <p>📅 Предложите удобную для Вас альтернативную дату</p>
+            <p>💌 Мы будем рады встретиться с Вами в другое время!</p>
+            <p style="margin-top: 15px; font-size: 13px; color: #B399A3;">
+              Свяжитесь с нами: <a href="mailto:kaz070318@gmail.com" style="color: #8B7355;">kaz070318@gmail.com</a>
+            </p>
+          </div>
+          
+          <div class="footer">
+            <p>Спасибо за ответ!</p>
+            <p>Thank you for your response!</p>
+            <p style="margin-top: 15px;">Надеемся на встречу в другой раз.</p>
+            <p style="margin-top: 5px;">Hope to see you another time. 🌸</p>
+          </div>`;
+
   return `
     <!DOCTYPE html>
     <html>
@@ -386,24 +429,7 @@ function generateInvitationHTML(name, willAttend) {
           
           <div class="guest-name">${name}</div>
           
-          <div class="greeting">
-            <p>Уважаемый (ая) гость!</p>
-            <p>С честью приглашаем Вас принять участие в праздновании торжественного события.</p>
-          </div>
-          
-          <div class="event-details">
-            <p>🎊 <strong>Праздник красоты и радости</strong></p>
-            <p>📅 <strong>15 апреля 2026 года</strong></p>
-            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" class="location-link">Посмотреть место проведения →</a></p>
-            <p>⏰ Приготовьтесь к незабываемому вечеру!</p>
-          </div>
-          
-          <div class="footer">
-            <p>Спасибо, что приняли наше приглашение!</p>
-            <p>Thank you for accepting our invitation!</p>
-            <p style="margin-top: 15px;">С нетерпением ждем встречи с вами.</p>
-            <p style="margin-top: 5px;">We look forward to celebrating with you! 🎉</p>
-          </div>
+          ${willAttend ? attendingContent : notAttendingContent}
           
           <div class="decorative">🎊 💐 🎊</div>
         </div>
@@ -415,7 +441,8 @@ function generateInvitationHTML(name, willAttend) {
 
 // Helper function to generate invitation text for email (avoid spam filters)
 function generateInvitationText(name, willAttend) {
-  return `Баян Сулу 2026
+  if (willAttend) {
+    return `Баян Сулу 2026
 Приглашение / Invitation
 
 Уважаемый (ая) ${name}!
@@ -436,6 +463,31 @@ We look forward to celebrating with you!
 ---
 Баян Сулу 2026
 Bayan Sulu 2026`;
+  } else {
+    return `Баян Сулу 2026
+Ответ на приглашение / Response
+
+Уважаемый (ая) ${name}!
+
+К сожалению, Вы сообщили, что не сможете присутствовать на нашем мероприятии.
+Мы будем скучать по Вам!
+
+ПОЖАЛУЙСТА, СВЯЖИТЕСЬ С НАМИ / PLEASE CONTACT US:
+- Сообщите причину, по которой не сможете приехать
+- Предложите удобную для Вас альтернативную дату встречи
+
+Email: kaz070318@gmail.com
+
+Мы будем рады встретиться с Вами в другое время!
+We would love to meet you another time!
+
+Спасибо за ответ!
+Thank you for your response!
+
+---
+Баян Сулу 2026
+Bayan Sulu 2026`;
+  }
 }
 
 function generateInvitationSVG(name, willAttend) {
