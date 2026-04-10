@@ -217,26 +217,7 @@ app.get('/admin/responses', async (req, res) => {
   }
 });
 
-// Admin: Delete a response
-app.delete('/admin/responses/:id', async (req, res) => {
-  try {
-    const collection = db.collection('responses');
-    const result = await collection.deleteOne({
-      _id: new ObjectId(req.params.id)
-    });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Response not found' });
-    }
-
-    res.json({ success: true, message: 'Response deleted' });
-  } catch (error) {
-    console.error('Delete error:', error);
-    res.status(500).json({ error: 'Failed to delete response' });
-  }
-});
-
-// Admin: Delete all responses
+// Admin: Delete ALL responses (must be BEFORE /:id route)
 app.delete('/admin/responses/all', async (req, res) => {
   try {
     console.log('🗑️ Delete all requested');
@@ -264,6 +245,25 @@ app.delete('/admin/responses/all', async (req, res) => {
   } catch (error) {
     console.error('❌ Delete all error:', error);
     res.status(500).json({ error: 'Failed to delete all responses', details: error.message });
+  }
+});
+
+// Admin: Delete a single response (must be AFTER /all route)
+app.delete('/admin/responses/:id', async (req, res) => {
+  try {
+    const collection = db.collection('responses');
+    const result = await collection.deleteOne({
+      _id: new ObjectId(req.params.id)
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Response not found' });
+    }
+
+    res.json({ success: true, message: 'Response deleted' });
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ error: 'Failed to delete response' });
   }
 });
 
