@@ -283,23 +283,29 @@ app.post('/invitations/generate-image', async (req, res) => {
 // Helper function to generate invitation HTML with pastel colors
 function generateInvitationHTML(name, willAttend) {
   const attendingContent = `
-          <div class="greeting">
-            <p>Уважаемый (ая) гость!</p>
-            <p>С честью приглашаем Вас принять участие в праздновании торжественного события.</p>
+          <div style="background: linear-gradient(135deg, #FFF5F0 0%, #F5E6E0 100%); border: 2px dashed #D4A5A5; border-radius: 12px; padding: 20px; margin: 20px 0;">
+            <p style="color: #8B7355; font-size: 16px; margin: 0 0 15px 0; font-weight: bold;">✨ ОФИЦИАЛЬНОЕ ПРИГЛАШЕНИЕ ✨</p>
+            <p style="color: #8B7355; font-size: 14px; margin: 0;">Уважаемый (ая) гость!</p>
+            <p style="color: #8B7355; font-size: 14px; margin: 10px 0 0 0;">С честью приглашаем Вас на торжественное событие.</p>
           </div>
           
-          <div class="event-details">
-            <p>🎊 <strong>Праздник красоты и радости</strong></p>
-            <p>📅 <strong>15 апреля 2026 года</strong></p>
-            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" class="location-link">Посмотреть место проведения →</a></p>
-            <p>⏰ Приготовьтесь к незабываемому вечеру!</p>
+          <div class="event-details" style="background: #FFFAF0; border: 2px solid #D4A5A5; position: relative;">
+            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #FFFAF0; padding: 0 15px; color: #D4A5A5; font-size: 12px;">❦ ДЕТАЛИ МЕРОПРИЯТИЯ ❦</div>
+            <p style="margin-top: 15px;">🎊 <strong style="color: #D4A5A5;">Праздник красоты и радости</strong></p>
+            <p>📅 <strong style="color: #8B5A45;">15 апреля 2026 года</strong></p>
+            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" class="location-link">Место проведения на 2GIS →</a></p>
+            <p style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #E8D5C4;">⏰ <em>Приготовьтесь к незабываемому вечеру!</em></p>
+          </div>
+          
+          <div style="background: #B4E7D1; border-radius: 25px; padding: 15px 30px; margin: 25px auto; display: inline-block; border: 2px solid #8B7355;">
+            <p style="color: #2d5a4e; font-weight: bold; margin: 0; font-size: 16px;">✓ ВЫ ПОДТВЕРДИЛИ УЧАСТИЕ</p>
           </div>
           
           <div class="footer">
-            <p>Спасибо, что приняли наше приглашение!</p>
+            <p style="color: #D4A5A5; font-size: 14px; margin-bottom: 10px;">🎉 Спасибо, что приняли приглашение! 🎉</p>
             <p>Thank you for accepting our invitation!</p>
-            <p style="margin-top: 15px;">С нетерпением ждем встречи с вами.</p>
-            <p style="margin-top: 5px;">We look forward to celebrating with you! 🎉</p>
+            <p style="margin-top: 15px; color: #8B7355;">С нетерпением ждем встречи с вами!</p>
+            <p style="margin-top: 5px;">We look forward to celebrating with you! 💐</p>
           </div>`;
 
   const notAttendingContent = `
@@ -495,26 +501,15 @@ function generateInvitationSVG(name, willAttend) {
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
   
-  // Mobile-friendly dimensions (600x800 for better phone fit)
-  const width = 600;
-  const height = 800;
+  // Ticket dimensions - portrait for phone
+  const width = 500;
+  const height = 850;
   const centerX = width / 2;
   
-  // Different content based on attendance
-  const attendingDetails = `
-      <text x="${centerX}" y="480" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">🎊 Праздник красоты и радости</text>
-      <text x="${centerX}" y="505" font-size="14" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold">📅 15 апреля 2026</text>
-      <text x="${centerX}" y="530" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📍 2GIS: astana/geo/70000001068734198</text>
-      <text x="${centerX}" y="555" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>`;
-  
-  const notAttendingDetails = `
-      <text x="${centerX}" y="480" font-size="14" text-anchor="middle" fill="#8B5A45" font-family="Georgia, serif" font-weight="bold">😔 К сожалению, Вы не сможете присутствовать</text>
-      <text x="${centerX}" y="510" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Пожалуйста, сообщите нам:</text>
-      <text x="${centerX}" y="535" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📝 Причину отказа</text>
-      <text x="${centerX}" y="555" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 Альтернативную дату</text>
-      <text x="${centerX}" y="580" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">kaz070318@gmail.com</text>`;
-
-  const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
+  // Generate barcode-like pattern for ticket authenticity
+  const barcodePattern = Array.from({length: 30}, (_, i) => 
+    `<rect x="${60 + i * 12}" y="780" width="${Math.random() > 0.5 ? 6 : 3}" height="40" fill="#8B7355"/>`
+  ).join('');
 
   return `
     <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -523,40 +518,78 @@ function generateInvitationSVG(name, willAttend) {
           <stop offset="0%" style="stop-color:#F0E6D2;stop-opacity:1" />
           <stop offset="100%" style="stop-color:#E8D5C4;stop-opacity:1" />
         </linearGradient>
+        <linearGradient id="ticketGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#FFFAF0;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#FFF5F0;stop-opacity:1" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#D4A5A5" flood-opacity="0.3"/>
+        </filter>
       </defs>
       
       <!-- Background -->
       <rect width="${width}" height="${height}" fill="url(#bgGradient)"/>
       
-      <!-- Card background -->
-      <rect x="40" y="60" width="520" height="640" rx="15" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
+      <!-- Ticket Card with notches -->
+      <g filter="url(#shadow)">
+        <!-- Main ticket body -->
+        <path d="M 40 30 L ${width-40} 30 L ${width-40} ${height-70} Q ${width-40} ${height-50} ${width-60} ${height-50} L 60 ${height-50} Q 40 ${height-50} 40 ${height-70} Z" 
+              fill="url(#ticketGradient)" stroke="#D4A5A5" stroke-width="2"/>
+        
+        <!-- Top decorative line -->
+        <line x1="60" y1="70" x2="${width-60}" y2="70" stroke="#D4A5A5" stroke-width="2" stroke-dasharray="8,4"/>
+        
+        <!-- Side decorative borders -->
+        <rect x="50" y="80" width="8" height="${height-160}" rx="2" fill="#F5E6E0"/>
+        <rect x="${width-58}" y="80" width="8" height="${height-160}" rx="2" fill="#F5E6E0"/>
+      </g>
       
-      <!-- Decoration top -->
-      <text x="${centerX}" y="110" font-size="32" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎊 💐 🎊' : '🌸 💐 🌸'}</text>
+      <!-- Corner decorations -->
+      <text x="70" y="60" font-size="20" fill="#D4A5A5">❋</text>
+      <text x="${width-85}" y="60" font-size="20" fill="#D4A5A5">❋</text>
+      <text x="70" y="${height-80}" font-size="20" fill="#D4A5A5">❋</text>
+      <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">❋</text>
       
-      <!-- Title -->
-      <text x="${centerX}" y="170" font-size="20" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="1">Приглашаем Вас на</text>
-      <text x="${centerX}" y="215" font-size="38" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="3">Баян Сулу</text>
-      <text x="${centerX}" y="240" font-size="14" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">Bayan Sulu 2026</text>
+      <!-- Official Ticket Header -->
+      <text x="${centerX}" y="110" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="3">ОФИЦИАЛЬНОЕ ПРИГЛАШЕНИЕ</text>
+      <text x="${centerX}" y="135" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">OFFICIAL INVITATION</text>
       
-      <!-- Name box -->
-      <rect x="80" y="270" width="440" height="55" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="305" font-size="26" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
+      <!-- Event Title Box -->
+      <rect x="70" y="155" width="${width-140}" height="90" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="1"/>
+      <text x="${centerX}" y="190" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Приглашаем Вас на</text>
+      <text x="${centerX}" y="225" font-size="32" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="2">Баян Сулу</text>
+      <text x="${centerX}" y="245" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Bayan Sulu 2026</text>
       
-      <!-- Response badge -->
-      <rect x="120" y="350" width="360" height="45" rx="8" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="380" font-size="18" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold">${responseText}</text>
+      <!-- Guest Name Section -->
+      <rect x="70" y="265" width="${width-140}" height="70" rx="6" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="${centerX}" y="285" font-size="11" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">ГОСТЬ / GUEST</text>
+      <text x="${centerX}" y="315" font-size="26" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
       
-      <!-- Dynamic content -->
-      ${detailsContent}
+      <!-- Status Badge -->
+      <rect x="100" y="355" width="${width-200}" height="45" rx="20" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="${centerX}" y="385" font-size="18" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">${responseText}</text>
       
-      <!-- Decoration bottom -->
-      <text x="${centerX}" y="620" font-size="28" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎉 🎈 🎉' : '🌸 💌 🌸'}</text>
+      <!-- Event Details Box -->
+      <rect x="70" y="420" width="${width-140}" height="140" rx="8" fill="#FFF8F5" stroke="#E8D5C4" stroke-width="1" stroke-dasharray="4,2"/>
+      <text x="${centerX}" y="450" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" font-weight="bold">🎊 Праздник красоты и радости</text>
+      <text x="${centerX}" y="480" font-size="15" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold">📅 15 апреля 2026</text>
+      <text x="${centerX}" y="510" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📍 2GIS: astana/geo/70000001068734198</text>
+      <text x="${centerX}" y="540" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>
       
-      <!-- Footer text -->
-      <text x="${centerX}" y="670" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Спасибо за ответ!</text>
-      <text x="${centerX}" y="690" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Thank you for your response!</text>
-      <text x="${centerX}" y="720" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026</text>
+      <!-- Decorative divider -->
+      <line x1="100" y1="580" x2="${width-100}" y2="580" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
+      <text x="${centerX}" y="600" font-size="20" text-anchor="middle" fill="#D4A5A5">❦ ❦ ❦</text>
+      
+      <!-- Instructions -->
+      <text x="${centerX}" y="635" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Предъявите это приглашение при входе</text>
+      <text x="${centerX}" y="655" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Please present this invitation at the entrance</text>
+      
+      <!-- Barcode Section -->
+      <text x="${centerX}" y="705" font-size="10" text-anchor="middle" fill="#8B7355" font-family="monospace">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
+      ${barcodePattern}
+      
+      <!-- Bottom text -->
+      <text x="${centerX}" y="${height-35}" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026 • Благодарим за ответ!</text>
     </svg>
   `;
 }
