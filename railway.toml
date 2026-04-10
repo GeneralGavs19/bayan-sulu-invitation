@@ -4,5 +4,3 @@ buildCommand = "cd server && npm install && echo 'Build v4:40 debug'"
 
 [deploy]
 startCommand = "cd server && npm start"
-healthcheckPath = "/health"
-restartPolicyType = "on-failure"
