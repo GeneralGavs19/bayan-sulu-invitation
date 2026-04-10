@@ -495,24 +495,29 @@ function generateInvitationSVG(name, willAttend) {
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
   
+  // Mobile-friendly dimensions (600x800 for better phone fit)
+  const width = 600;
+  const height = 800;
+  const centerX = width / 2;
+  
   // Different content based on attendance
   const attendingDetails = `
-      <text x="400" y="620" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">🎊 Праздник красоты и радости</text>
-      <text x="400" y="645" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 15 апреля 2026 года</text>
-      <text x="400" y="670" font-size="14" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif">📍 2gis.kz/astana/geo/70000001068734198</text>
-      <text x="400" y="695" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>`;
+      <text x="${centerX}" y="480" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">🎊 Праздник красоты и радости</text>
+      <text x="${centerX}" y="505" font-size="14" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold">📅 15 апреля 2026</text>
+      <text x="${centerX}" y="530" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📍 2GIS: astana/geo/70000001068734198</text>
+      <text x="${centerX}" y="555" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>`;
   
   const notAttendingDetails = `
-      <text x="400" y="620" font-size="16" text-anchor="middle" fill="#8B5A45" font-family="Georgia, serif" font-weight="bold">😔 К сожалению, Вы не сможете присутствовать</text>
-      <text x="400" y="650" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Пожалуйста, сообщите нам:</text>
-      <text x="400" y="675" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📝 Причину, по которой не сможете приехать</text>
-      <text x="400" y="695" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 Предложите удобную альтернативную дату</text>
-      <text x="400" y="715" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">kaz070318@gmail.com</text>`;
+      <text x="${centerX}" y="480" font-size="14" text-anchor="middle" fill="#8B5A45" font-family="Georgia, serif" font-weight="bold">😔 К сожалению, Вы не сможете присутствовать</text>
+      <text x="${centerX}" y="510" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Пожалуйста, сообщите нам:</text>
+      <text x="${centerX}" y="535" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📝 Причину отказа</text>
+      <text x="${centerX}" y="555" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 Альтернативную дату</text>
+      <text x="${centerX}" y="580" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">kaz070318@gmail.com</text>`;
 
   const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
 
   return `
-    <svg width="800" height="1100" xmlns="http://www.w3.org/2000/svg">
+    <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style="stop-color:#F0E6D2;stop-opacity:1" />
@@ -521,37 +526,37 @@ function generateInvitationSVG(name, willAttend) {
       </defs>
       
       <!-- Background -->
-      <rect width="800" height="1000" fill="url(#bgGradient)"/>
+      <rect width="${width}" height="${height}" fill="url(#bgGradient)"/>
       
       <!-- Card background -->
-      <rect x="50" y="100" width="700" height="800" rx="20" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="3"/>
+      <rect x="40" y="60" width="520" height="640" rx="15" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
       
       <!-- Decoration top -->
-      <text x="400" y="180" font-size="40" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎊  💐  🎊' : '🌸  💐  🌸'}</text>
+      <text x="${centerX}" y="110" font-size="32" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎊 💐 🎊' : '🌸 💐 🌸'}</text>
       
       <!-- Title -->
-      <text x="400" y="260" font-size="28" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="2">Приглашаем Вас на</text>
-      <text x="400" y="310" font-size="48" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="4">Баян Сулу</text>
-      <text x="400" y="340" font-size="18" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">Bayan Sulu 2026</text>
+      <text x="${centerX}" y="170" font-size="20" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="1">Приглашаем Вас на</text>
+      <text x="${centerX}" y="215" font-size="38" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="3">Баян Сулу</text>
+      <text x="${centerX}" y="240" font-size="14" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">Bayan Sulu 2026</text>
       
       <!-- Name box -->
-      <rect x="100" y="380" width="600" height="70" rx="10" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="400" y="425" font-size="32" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
+      <rect x="80" y="270" width="440" height="55" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="${centerX}" y="305" font-size="26" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
       
       <!-- Response badge -->
-      <rect x="150" y="480" width="500" height="60" rx="10" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="400" y="520" font-size="22" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold">${responseText}</text>
+      <rect x="120" y="350" width="360" height="45" rx="8" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="${centerX}" y="380" font-size="18" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold">${responseText}</text>
       
       <!-- Dynamic content -->
       ${detailsContent}
       
       <!-- Decoration bottom -->
-      <text x="400" y="780" font-size="36" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎉  🎈  🎉' : '🌸  💌  🌸'}</text>
+      <text x="${centerX}" y="620" font-size="28" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎉 🎈 🎉' : '🌸 💌 🌸'}</text>
       
       <!-- Footer text -->
-      <text x="400" y="850" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Спасибо за ответ!</text>
-      <text x="400" y="875" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Thank you for your response!</text>
-      <text x="400" y="910" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026</text>
+      <text x="${centerX}" y="670" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Спасибо за ответ!</text>
+      <text x="${centerX}" y="690" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Thank you for your response!</text>
+      <text x="${centerX}" y="720" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026</text>
     </svg>
   `;
 }

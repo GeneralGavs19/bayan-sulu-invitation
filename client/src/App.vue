@@ -181,10 +181,14 @@
                 <p class="invitation-text">
                   С честью приглашаем Вас принять участие в праздновании нашего торжества
                 </p>
-                <p class="event-details">
-                  🎊 Праздник красоты и радости <br>
-                  ✨ Приготовьтесь к незабываемому вечеру!
-                </p>
+                <div class="event-details" style="background: linear-gradient(135deg, #FFF5F0 0%, #F5E6E0 100%); padding: 15px; border-radius: 12px; border: 1px dashed #D4A5A5; margin: 15px 0;">
+                  <p style="margin: 8px 0; color: #8B7355; font-size: 15px;">🎊 <strong>Праздник красоты и радости</strong></p>
+                  <p style="margin: 8px 0; color: #D4A5A5; font-size: 14px;">📅 <strong>15 апреля 2026 года</strong></p>
+                  <p style="margin: 8px 0; font-size: 13px;">
+                    📍 <a href="https://2gis.kz/astana/geo/70000001068734198" target="_blank" style="color: #8B7355; text-decoration: underline;">Посмотреть место на 2GIS →</a>
+                  </p>
+                  <p style="margin: 8px 0; color: #8B7355; font-size: 14px;">✨ Приготовьтесь к незабываемому вечеру!</p>
+                </div>
               </template>
               <template v-else>
                 <div class="not-attending-message">
