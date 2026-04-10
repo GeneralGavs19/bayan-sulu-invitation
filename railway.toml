@@ -1,7 +1,0 @@
-[build]
-builder = "nixpacks"
-# Force rebuild - updated at 2026-04-11 03:44
-
-[deploy]
-startCommand = "cd server && npm start"
-restartPolicyType = "on-failure"
