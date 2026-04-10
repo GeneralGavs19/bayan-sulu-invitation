@@ -191,7 +191,6 @@
               <template v-else>
                 <div class="not-attending-message">
                   <p style="color: #8B5A45; font-weight: bold; font-size: 16px; margin-bottom: 15px;">😔 К сожалению, Вы не сможете присутствовать</p>
-                  <p style="color: #8B7355; margin-bottom: 15px;">Мы будем скучать по Вам!</p>
                   <div class="suggestion-box" style="background: #FFF5F0; border: 2px dashed #D4A5A5; padding: 15px; border-radius: 10px; margin: 15px 0;">
                     <p style="color: #8B5A45; font-weight: bold; margin-bottom: 10px;">Пожалуйста, сообщите нам:</p>
                     <p style="color: #8B7355; font-size: 14px; margin: 5px 0;">📝 Причину, по которой не сможете приехать</p>
@@ -211,10 +210,7 @@
               <template v-if="formData.willAttend">
                 <p class="attending-response">✓ ВЫ ПОДТВЕРДИЛИ СВОЕ УЧАСТИЕ</p>
                 <p>Приглашение отправлено на {{ formData.email }}</p>
-                <p style="color: #8B7355; font-size: 13px; margin-top: 8px;">📅 15 апреля 2026 года</p>
-                <p style="color: #8B7355; font-size: 13px;">📍 <a href="https://2gis.kz/astana/geo/70000001068734198" target="_blank" style="color: #D4A5A5; text-decoration: underline;">Посмотреть место на 2GIS</a></p>
                 <p style="color: #B399A3; font-size: 12px; margin-top: 10px; font-style: italic;">⚠️ Письмо может попасть в спам — проверьте папку "Спам" / Spam</p>
-                <p>Waiting for you! 🎉</p>
               </template>
               <template v-else>
                 <p class="not-attending-response">✗ ВЫ СООБЩИЛИ О НЕВОЗМОЖНОСТИ ПРИЕХАТЬ</p>
