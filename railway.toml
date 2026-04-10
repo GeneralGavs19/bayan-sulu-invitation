@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "echo 'Build starting at $(date)' && cd server && npm install"
+buildCommand = "echo 'Build refresh at 2026-04-11 03:59' && cd server && npm install"
 
 [deploy]
 startCommand = "cd server && npm start"
