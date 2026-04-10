@@ -239,17 +239,31 @@ app.delete('/admin/responses/:id', async (req, res) => {
 // Admin: Delete all responses
 app.delete('/admin/responses/all', async (req, res) => {
   try {
+    console.log('🗑️ Delete all requested');
+    
+    if (!db) {
+      console.error('❌ DB not connected');
+      return res.status(500).json({ error: 'Database not connected' });
+    }
+    
     const collection = db.collection('responses');
+    console.log('📊 Collection accessed');
+    
+    const countBefore = await collection.countDocuments();
+    console.log(`📋 Documents before: ${countBefore}`);
+    
     const result = await collection.deleteMany({});
+    console.log(`✅ Deleted ${result.deletedCount} documents`);
     
     res.json({ 
       success: true, 
       message: `All responses deleted`,
-      deletedCount: result.deletedCount 
+      deletedCount: result.deletedCount,
+      totalBefore: countBefore
     });
   } catch (error) {
-    console.error('Delete all error:', error);
-    res.status(500).json({ error: 'Failed to delete all responses' });
+    console.error('❌ Delete all error:', error);
+    res.status(500).json({ error: 'Failed to delete all responses', details: error.message });
   }
 });
 
