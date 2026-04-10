@@ -230,6 +230,8 @@
 <script>
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 export default {
   name: 'App',
   data() {
@@ -245,7 +247,7 @@ export default {
       loading: true,
       error: '',
       shareSuccess: false,
-      apiUrl: '/api',
+      apiUrl: API_URL,
       // Admin related
       adminLoggedIn: false,
       adminEmail: '',
