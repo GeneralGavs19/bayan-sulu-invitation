@@ -236,6 +236,23 @@ app.delete('/admin/responses/:id', async (req, res) => {
   }
 });
 
+// Admin: Delete all responses
+app.delete('/admin/responses/all', async (req, res) => {
+  try {
+    const collection = db.collection('responses');
+    const result = await collection.deleteMany({});
+    
+    res.json({ 
+      success: true, 
+      message: `All responses deleted`,
+      deletedCount: result.deletedCount 
+    });
+  } catch (error) {
+    console.error('Delete all error:', error);
+    res.status(500).json({ error: 'Failed to delete all responses' });
+  }
+});
+
 // Generate invitation image (PNG)
 app.post('/invitations/generate-image', async (req, res) => {
   try {

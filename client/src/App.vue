@@ -62,7 +62,16 @@
         </div>
 
         <div class="admin-responses">
-          <h3>Все ответы гостей:</h3>
+          <div class="admin-responses-header">
+            <h3>Все ответы гостей:</h3>
+            <button 
+              v-if="adminResponses.length > 0" 
+              @click="deleteAllResponses" 
+              class="btn-delete-all"
+            >
+              🗑️ Удалить все
+            </button>
+          </div>
           <div v-if="adminResponses.length === 0" class="no-responses">Пока нет ответов</div>
           <div v-else class="responses-list">
             <div v-for="resp in adminResponses" :key="resp._id" class="response-item">
@@ -463,6 +472,21 @@ export default {
       }
     },
 
+    async deleteAllResponses() {
+      if (!confirm('⚠️ ВНИМАНИЕ! Вы собираетесь удалить ВСЕ ответы гостей.\n\nЭто действие нельзя отменить!\n\nВы абсолютно уверены?')) {
+        return;
+      }
+
+      try {
+        await axios.delete(`${this.apiUrl}/admin/responses/all`);
+        await this.loadAdminData();
+        alert('✓ Все ответы успешно удалены');
+      } catch (error) {
+        console.error('Delete all error:', error);
+        this.error = 'Ошибка удаления всех ответов';
+      }
+    },
+
     formatDate(dateString) {
       const date = new Date(dateString);
       return date.toLocaleString('ru-RU', {
@@ -764,10 +788,19 @@ body {
   margin-top: 30px;
 }
 
+.admin-responses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .admin-responses h3 {
   color: #8B7355;
   font-size: 18px;
-  margin: 0 0 20px 0;
+  margin: 0;
   font-weight: normal;
 }
 
@@ -835,6 +868,29 @@ body {
 
 .btn-delete:hover {
   background: #E8B4A8;
+}
+
+.btn-delete-all {
+  background: linear-gradient(135deg, #D4A5A5 0%, #B399A3 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 165, 165, 0.3);
+}
+
+.btn-delete-all:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 165, 0.4);
+  background: linear-gradient(135deg, #C99595 0%, #A38993 100%);
+}
+
+.btn-delete-all:active {
+  transform: scale(0.98);
 }
 
 .no-responses {
