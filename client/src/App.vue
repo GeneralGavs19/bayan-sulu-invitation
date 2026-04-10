@@ -228,9 +228,6 @@
             <button @click="downloadInvitationPNG" class="btn btn-secondary">
               🖼️ Скачать как картинку
             </button>
-            <button @click="downloadInvitation" class="btn btn-secondary">
-              📥 Скачать HTML
-            </button>
             <button @click="shareLink" class="btn btn-secondary">
               📤 Поделиться ссылкой
             </button>
@@ -416,7 +413,7 @@ export default {
         link.setAttribute('download', `invitation-${this.formData.name.replace(/\\s+/g, '_')}.png`);
         document.body.appendChild(link);
         link.click();
-        link.parentChild.removeChild(link);
+        link.parentNode.removeChild(link);
       } catch (error) {
         this.error = 'Ошибка скачивания картинки: ' + error.message;
         console.error('Download PNG error:', error);
@@ -1340,9 +1337,35 @@ body {
 @media (max-width: 480px) {
   body {
     padding: 5px;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
+    min-height: auto;
+    display: block;
+    font-size: 14px;
+  }
+  
+  .container {
+    padding: 5px;
+  }
+  
+  .card {
+    margin: 5px 0;
+  }
+  
+  .success-card {
+    padding: 10px;
+  }
+  
+  .invitation {
+    padding: 15px;
+    border-width: 2px;
+  }
+  
+  .invitation-header {
+    margin-bottom: 10px;
+  }
+  
+  .invitation-header h1 {
+    font-size: 1rem;
+    letter-spacing: 1px;
   }
   
   .title {
