@@ -975,10 +975,16 @@ body {
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   margin-top: 10px;
   font-family: 'Georgia', serif;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .btn-primary {
@@ -1007,6 +1013,11 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-secondary:active {
+  background: #E8D5C4;
+  transform: scale(0.98);
+}
+
 .btn-admin-login {
   background: linear-gradient(135deg, #B399A3 0%, #D4A5A5 100%);
   color: white;
@@ -1016,13 +1027,19 @@ body {
   cursor: pointer;
   font-weight: 700;
   width: 100%;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-admin-login:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(212, 165, 165, 0.45);
+}
+
+.btn-admin-login:active {
+  transform: scale(0.98);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .btn-back {
