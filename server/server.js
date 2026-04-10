@@ -577,10 +577,10 @@ function generateInvitationSVG(name, willAttend) {
       </g>
       
       <!-- Corner decorations -->
-      <text x="70" y="60" font-size="20" fill="#D4A5A5">❋</text>
-      <text x="${width-85}" y="60" font-size="20" fill="#D4A5A5">❋</text>
-      <text x="70" y="${height-80}" font-size="20" fill="#D4A5A5">❋</text>
-      <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">❋</text>
+      <text x="70" y="60" font-size="20" fill="#D4A5A5">*</text>
+      <text x="${width-85}" y="60" font-size="20" fill="#D4A5A5">*</text>
+      <text x="70" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
+      <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
       
       <!-- Official Ticket Header -->
       <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="3">ОФИЦИАЛЬНОЕ ПРИГЛАШЕНИЕ</text>
@@ -610,7 +610,7 @@ function generateInvitationSVG(name, willAttend) {
       
       <!-- Decorative divider -->
       <line x1="100" y1="545" x2="${width-100}" y2="545" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
-      <text x="${centerX}" y="565" font-size="20" text-anchor="middle" fill="#D4A5A5">❦ ❦ ❦</text>
+      <text x="${centerX}" y="565" font-size="20" text-anchor="middle" fill="#D4A5A5">~ ~ ~</text>
       
       <!-- Instructions -->
       <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Предъявите это приглашение при входе</text>
