@@ -491,9 +491,25 @@ Bayan Sulu 2026`;
 }
 
 function generateInvitationSVG(name, willAttend) {
-  const responseText = willAttend ? '🎉 ПРИДУ' : '😢 НЕ ПРИДУ';
+  const responseText = willAttend ? '✓ ПРИДУ' : '✗ НЕ ПРИДУ';
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
+  
+  // Different content based on attendance
+  const attendingDetails = `
+      <text x="400" y="620" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">🎊 Праздник красоты и радости</text>
+      <text x="400" y="645" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 15 апреля 2026 года</text>
+      <text x="400" y="670" font-size="14" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif">📍 2gis.kz/astana/geo/70000001068734198</text>
+      <text x="400" y="695" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>`;
+  
+  const notAttendingDetails = `
+      <text x="400" y="620" font-size="16" text-anchor="middle" fill="#8B5A45" font-family="Georgia, serif" font-weight="bold">😔 К сожалению, Вы не сможете присутствовать</text>
+      <text x="400" y="650" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Пожалуйста, сообщите нам:</text>
+      <text x="400" y="675" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📝 Причину, по которой не сможете приехать</text>
+      <text x="400" y="695" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 Предложите удобную альтернативную дату</text>
+      <text x="400" y="715" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">kaz070318@gmail.com</text>`;
+
+  const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
 
   return `
     <svg width="800" height="1100" xmlns="http://www.w3.org/2000/svg">
@@ -511,33 +527,31 @@ function generateInvitationSVG(name, willAttend) {
       <rect x="50" y="100" width="700" height="800" rx="20" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="3"/>
       
       <!-- Decoration top -->
-      <text x="400" y="180" font-size="40" text-anchor="middle" fill="#D4A5A5">🎊  💐  🎊</text>
+      <text x="400" y="180" font-size="40" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎊  💐  🎊' : '🌸  💐  🌸'}</text>
       
       <!-- Title -->
-      <text x="400" y="280" font-size="48" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" font-weight="bold" letter-spacing="4">Баян Сулу</text>
-      <text x="400" y="320" font-size="18" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">Bayan Sulu 2026</text>
+      <text x="400" y="260" font-size="28" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="2">Приглашаем Вас на</text>
+      <text x="400" y="310" font-size="48" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="4">Баян Сулу</text>
+      <text x="400" y="340" font-size="18" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">Bayan Sulu 2026</text>
       
       <!-- Name box -->
-      <rect x="100" y="360" width="600" height="80" rx="10" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="400" y="415" font-size="36" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
+      <rect x="100" y="380" width="600" height="70" rx="10" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="400" y="425" font-size="32" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
       
       <!-- Response badge -->
-      <rect x="150" y="500" width="500" height="80" rx="10" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="400" y="555" font-size="24" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold">${responseText}</text>
+      <rect x="150" y="480" width="500" height="60" rx="10" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
+      <text x="400" y="520" font-size="22" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold">${responseText}</text>
       
-      <!-- Event details -->
-      <text x="400" y="620" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">🎊 Праздник красоты и радости</text>
-      <text x="400" y="645" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📅 15 апреля 2026 года</text>
-      <text x="400" y="670" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📍 Место проведения</text>
-      <text x="400" y="695" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>
+      <!-- Dynamic content -->
+      ${detailsContent}
       
       <!-- Decoration bottom -->
-      <text x="400" y="740" font-size="36" text-anchor="middle" fill="#D4A5A5">🎉  🎈  🎉</text>
+      <text x="400" y="780" font-size="36" text-anchor="middle" fill="#D4A5A5">${willAttend ? '🎉  🎈  🎉' : '🌸  💌  🌸'}</text>
       
       <!-- Footer text -->
-      <text x="400" y="830" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Спасибо за ответ!</text>
-      <text x="400" y="855" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Thank you for your response!</text>
-      <text x="400" y="890" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026</text>
+      <text x="400" y="850" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Спасибо за ответ!</text>
+      <text x="400" y="875" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Thank you for your response!</text>
+      <text x="400" y="910" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026</text>
     </svg>
   `;
 }
