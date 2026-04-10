@@ -490,7 +490,10 @@ function generateInvitationSVG(name, willAttend) {
 
 // SPA Fallback - serve index.html for all non-API routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  if (!req.path.startsWith('/api')) {
+    return res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  }
+  res.status(404).json({ error: 'Not found' });
 });
 
 // Start server
