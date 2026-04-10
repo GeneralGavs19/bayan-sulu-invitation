@@ -1,5 +1,8 @@
 [phases.install]
-cmds = ["cd server && npm install"]
+cmds = [
+  "cd server && npm install",
+  "cd server && npm install sharp --platform=linux --arch=x64 --force"
+]
 
 [phases.build]
 cmds = ["echo 'Skipping build step (server-only deploy)' "]
