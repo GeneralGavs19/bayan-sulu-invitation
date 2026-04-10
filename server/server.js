@@ -436,7 +436,6 @@ We look forward to celebrating with you!
 ---
 Баян Сулу 2026
 Bayan Sulu 2026`;
-} 
 }
 
 function generateInvitationSVG(name, willAttend) {
