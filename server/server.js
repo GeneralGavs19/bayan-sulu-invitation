@@ -282,10 +282,6 @@ app.post('/api/invitations/generate-image', async (req, res) => {
 
 // Helper function to generate invitation HTML with pastel colors
 function generateInvitationHTML(name, willAttend) {
-  const responseText = willAttend ? '🎉 ПРИДУ / I WILL COME' : '😢 НЕ ПРИДУ / I CANNOT COME';
-  const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8'; // Pastel green or pastel peach
-  const textColor = willAttend ? '#2d5a4e' : '#8B5A45'; // Dark green or brown
-
   return `
     <!DOCTYPE html>
     <html>
@@ -304,88 +300,78 @@ function generateInvitationHTML(name, willAttend) {
         }
         .invitation {
           background: #FFFAF0;
-          border-radius: 20px;
-          padding: 50px;
+          border-radius: 15px;
+          padding: 40px;
           max-width: 600px;
           box-shadow: 0 10px 40px rgba(0,0,0,0.1);
           text-align: center;
-          border: 3px solid #D4A5A5;
-          position: relative;
-          overflow: hidden;
-        }
-        .invitation::before {
-          content: '✨ ✨ ✨ ✨ ✨';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(90deg, transparent, #D4A5A5, transparent);
-          padding: 5px;
-          font-size: 14px;
-          color: #D4A5A5;
-        }
-        .invitation::after {
-          content: '✨ ✨ ✨ ✨ ✨';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: linear-gradient(90deg, transparent, #D4A5A5, transparent);
-          padding: 5px;
-          font-size: 14px;
-          color: #D4A5A5;
+          border: 2px solid #D4A5A5;
         }
         .content {
-          position: relative;
-          z-index: 1;
-          padding-top: 30px;
+          padding: 20px 0;
         }
         h1 {
           color: #8B7355;
-          font-size: 42px;
+          font-size: 36px;
           margin: 0 0 10px 0;
-          text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
           font-weight: normal;
           letter-spacing: 2px;
         }
         .subtitle {
           color: #B399A3;
-          font-size: 16px;
+          font-size: 14px;
           margin-bottom: 30px;
           font-style: italic;
-          font-weight: light;
         }
-        .name {
+        .guest-name {
           color: #5a4a4a;
-          font-size: 32px;
+          font-size: 28px;
           font-weight: bold;
           margin: 30px 0;
           padding: 20px;
           background: #F5E6E0;
           border-radius: 10px;
-          border-left: 5px solid #D4A5A5;
+          border-left: 4px solid #D4A5A5;
         }
-        .response {
-          color: ${textColor};
-          background: ${responseColor};
-          padding: 15px 30px;
+        .greeting {
+          color: #8B7355;
+          font-size: 15px;
+          line-height: 1.8;
+          margin: 25px 0;
+          padding: 0 20px;
+        }
+        .event-details {
+          background: #F5E6E0;
+          padding: 20px;
           border-radius: 10px;
-          font-size: 20px;
-          font-weight: bold;
-          margin: 30px 0;
-          display: inline-block;
-        }
-        .details {
+          margin: 25px 0;
           color: #8B7355;
           font-size: 14px;
-          margin-top: 30px;
-          border-top: 2px dashed #E8D5C4;
+          line-height: 1.8;
+        }
+        .event-details p {
+          margin: 8px 0;
+        }
+        .location-link {
+          color: #8B7355;
+          text-decoration: none;
+          font-weight: bold;
+          border-bottom: 2px solid #D4A5A5;
+        }
+        .location-link:hover {
+          color: #B399A3;
+        }
+        .footer {
+          color: #B399A3;
+          font-size: 13px;
+          margin-top: 25px;
           padding-top: 20px;
+          border-top: 2px dashed #E8D5C4;
           line-height: 1.6;
         }
         .decorative {
-          font-size: 24px;
-          margin: 20px 0;
+          font-size: 20px;
+          margin: 15px 0;
           letter-spacing: 8px;
           color: #D4A5A5;
         }
@@ -394,25 +380,32 @@ function generateInvitationHTML(name, willAttend) {
     <body>
       <div class="invitation">
         <div class="content">
-          <div class="decorative">🎊 💐 🎊</div>
+          <div class="decorative">✨ 🎊 ✨</div>
           <h1>Баян Сулу</h1>
           <p class="subtitle">Bayan Sulu 2026</p>
           
-          <div class="name">${name}</div>
+          <div class="guest-name">${name}</div>
           
-          <div class="response">${responseText}</div>
-          
-          <div class="decorative">🎉 🎈 🎉</div>
-          
-          <div class="details">
-            <p>🎊 Праздник красоты и радости</p>
-            <p>📅 15 апреля 2026 года</p>
-            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" style="color: #8B7355; text-decoration: underline;">Место проведения</a></p>
-            <p>✨ Приготовьтесь к незабываемому вечеру!</p>
-            <p>Спасибо за ответ! / Thank you for your response!</p>
-            <p>Мы ждем вас на нашем празднике!</p>
-            <p>We look forward to celebrating with you!</p>
+          <div class="greeting">
+            <p>Уважаемый (ая) гость!</p>
+            <p>С честью приглашаем Вас принять участие в праздновании торжественного события.</p>
           </div>
+          
+          <div class="event-details">
+            <p>🎊 <strong>Праздник красоты и радости</strong></p>
+            <p>📅 <strong>15 апреля 2026 года</strong></p>
+            <p>📍 <a href="https://2gis.kz/astana/geo/70000001068734198" class="location-link">Посмотреть место проведения →</a></p>
+            <p>⏰ Приготовьтесь к незабываемому вечеру!</p>
+          </div>
+          
+          <div class="footer">
+            <p>Спасибо, что приняли наше приглашение!</p>
+            <p>Thank you for accepting our invitation!</p>
+            <p style="margin-top: 15px;">С нетерпением ждем встречи с вами.</p>
+            <p style="margin-top: 5px;">We look forward to celebrating with you! 🎉</p>
+          </div>
+          
+          <div class="decorative">🎊 💐 🎊</div>
         </div>
       </div>
     </body>
@@ -420,20 +413,30 @@ function generateInvitationHTML(name, willAttend) {
   `;
 }
 
-// Helper function to generate invitation SVG for image export
+// Helper function to generate invitation text for email (avoid spam filters)
 function generateInvitationText(name, willAttend) {
-  const attendanceMessage = willAttend
-    ? 'Спасибо за ответ! Мы ждем вас на нашем празднике.'
-    : 'Ваш ответ принят. Спасибо, что сообщили.';
+  return `Баян Сулу 2026
+Приглашение / Invitation
 
-  return `Приглашаем Вас на Баян Сулу 2026
+Уважаемый (ая) ${name}!
 
-${name}
+С честью приглашаем Вас принять участие в праздновании торжественного события.
 
-${attendanceMessage}
+ДЕТАЛИ МЕРОПРИЯТИЯ / EVENT DETAILS:
+- Название / Event: Баян Сулу 2026 - Праздник красоты и радости
+- Дата / Date: 15 апреля 2026 года (April 15, 2026)
+- Место / Location: https://2gis.kz/astana/geo/70000001068734198
 
-Bayan Sulu 2026
-`; 
+Спасибо за то, что приняли наше приглашение!
+Thank you for accepting our invitation!
+
+С нетерпением ждем встречи с вами.
+We look forward to celebrating with you!
+
+---
+Баян Сулу 2026
+Bayan Sulu 2026`;
+} 
 }
 
 function generateInvitationSVG(name, willAttend) {
