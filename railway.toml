@@ -1,6 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd server && npm install && echo 'Cache refresh 05:14'"
-
-[deploy]
-startCommand = "cd server && npm start"
