@@ -541,6 +541,20 @@ function generateInvitationSVG(name, willAttend) {
   const height = 850;
   const centerX = width / 2;
   
+  // Event details based on attendance
+  const attendingDetails = `
+      <text x="${centerX}" y="425" font-size="16" text-anchor="middle" fill="#8B7355" font-weight="bold">Prazdnik krasoty i radosti</text>
+      <text x="${centerX}" y="455" font-size="15" text-anchor="middle" fill="#D4A5A5" font-weight="bold">15 aprelya 2026 goda</text>
+      <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#8B7355">2GIS: astana/geo/70000001068734198</text>
+      <text x="${centerX}" y="515" font-size="13" text-anchor="middle" fill="#8B7355">Prigotovtes k nezabyvaemomu vecheru!</text>`;
+  
+  const notAttendingDetails = `
+      <text x="${centerX}" y="425" font-size="14" text-anchor="middle" fill="#8B5A45" font-weight="bold">K sozhaleniyu, Vy ne smozhete prisutstvovat</text>
+      <text x="${centerX}" y="455" font-size="12" text-anchor="middle" fill="#8B7355">Soobshchite prichinu i predlozhite datu</text>
+      <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#B399A3">kaz070318@gmail.com</text>`;
+  
+  const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
+  
   // Generate barcode-like pattern for ticket authenticity (centered, smaller)
   const barcodeStartX = 100;
   const barcodePattern = Array.from({length: 25}, (_, i) => 
