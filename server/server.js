@@ -270,16 +270,20 @@ app.delete('/admin/responses/:id', async (req, res) => {
 // Generate invitation image (PNG)
 app.post('/invitations/generate-image', async (req, res) => {
   try {
+    console.log('🎨 Generate image requested');
     const { name, willAttend } = req.body;
+    console.log(`   Name: ${name}, willAttend: ${willAttend}`);
 
     if (!name) {
+      console.log('❌ Missing name');
       return res.status(400).json({ error: 'Missing name' });
     }
 
-    const htmlContent = generateInvitationHTML(name, willAttend);
-
-    // Create SVG instead
+    // Create SVG
+    console.log('📝 Generating SVG...');
     const svgContent = generateInvitationSVG(name, willAttend);
+    console.log(`✅ SVG generated, length: ${svgContent.length}`);
+    
     const buffer = Buffer.from(svgContent);
 
     // Try to convert to PNG using sharp, fallback to SVG
