@@ -5,6 +5,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createCanvas } from 'canvas';
 
 dotenv.config();
 
@@ -279,39 +280,16 @@ app.post('/invitations/generate-image', async (req, res) => {
       return res.status(400).json({ error: 'Missing name' });
     }
 
-    // Create SVG
-    console.log('📝 Generating SVG...');
-    const svgContent = generateInvitationSVG(name, willAttend);
-    console.log(`✅ SVG generated, length: ${svgContent.length}`);
+    // Generate PNG using Canvas
+    console.log('📝 Generating Canvas...');
+    const pngBuffer = await generateInvitationCanvas(name, willAttend);
+    console.log(`✅ PNG generated, size: ${pngBuffer.length} bytes`);
     
-    const buffer = Buffer.from(svgContent);
-
-    // Try to convert to PNG using sharp, fallback to SVG
-    let sharp;
-    try {
-      const sharpModule = await import('sharp');
-      sharp = sharpModule.default;
-    } catch (e) {
-      // Sharp not available, will fallback to SVG
-    }
-    
-    if (sharp) {
-      try {
-        const pngBuffer = await sharp(buffer).png().toBuffer();
-        res.type('image/png');
-        res.send(pngBuffer);
-        return;
-      } catch (err) {
-        console.log('⚠️ PNG conversion failed, returning SVG:', err.message);
-      }
-    }
-    
-    // Fallback: return SVG
-    res.type('image/svg+xml');
-    res.send(svgContent);
+    res.type('image/png');
+    res.send(pngBuffer);
   } catch (error) {
-    console.error('Image generation error:', error);
-    res.status(500).json({ error: 'Failed to generate image' });
+    console.error('❌ Image generation error:', error);
+    res.status(500).json({ error: 'Failed to generate image', details: error.message });
   }
 });
 
@@ -531,111 +509,200 @@ Bayan Sulu 2026`;
   }
 }
 
-function generateInvitationSVG(name, willAttend) {
-  const responseText = willAttend ? '[+] ATTENDING' : '[-] NOT ATTENDING';
-  const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
-  const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
-  
-  // Ticket dimensions - portrait for phone
+async function generateInvitationCanvas(name, willAttend) {
   const width = 500;
   const height = 850;
-  const centerX = width / 2;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
   
-  // Event details based on attendance
-  const attendingDetails = `
-      <text x="${centerX}" y="425" font-size="16" text-anchor="middle" fill="#8B7355">Celebration of Beauty and Joy</text>
-      <text x="${centerX}" y="455" font-size="15" text-anchor="middle" fill="#D4A5A5">April 15, 2026</text>
-      <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#8B7355">2GIS: astana/geo/70000001068734198</text>
-      <text x="${centerX}" y="515" font-size="13" text-anchor="middle" fill="#8B7355">Get ready for an unforgettable evening!</text>`;
+  // Background gradient
+  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+  bgGradient.addColorStop(0, '#F0E6D2');
+  bgGradient.addColorStop(1, '#E8D5C4');
+  ctx.fillStyle = bgGradient;
+  ctx.fillRect(0, 0, width, height);
   
-  const notAttendingDetails = `
-      <text x="${centerX}" y="425" font-size="14" text-anchor="middle" fill="#8B5A45">Unfortunately, you cannot attend</text>
-      <text x="${centerX}" y="455" font-size="12" text-anchor="middle" fill="#8B7355">Please share the reason and suggest a date</text>
-      <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#B399A3">kaz070318@gmail.com</text>`;
+  // Ticket shadow/border
+  ctx.shadowColor = 'rgba(212, 165, 165, 0.3)';
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 4;
   
-  const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
+  // Main ticket body
+  ctx.fillStyle = '#FFFAF0';
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(40, 30, 420, 730, 10);
+  ctx.fill();
+  ctx.stroke();
   
-  // Generate barcode-like pattern for ticket authenticity (centered, smaller)
-  const barcodeStartX = 100;
-  const barcodePattern = Array.from({length: 25}, (_, i) => 
-    `<rect x="${barcodeStartX + i * 12}" y="720" width="${Math.random() > 0.5 ? 5 : 3}" height="35" fill="#8B7355"/>`
-  ).join('');
-
-  return `
-    <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#F0E6D2;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#E8D5C4;stop-opacity:1" />
-        </linearGradient>
-        <linearGradient id="ticketGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#FFFAF0;stop-opacity:1" />
-          <stop offset="100%" style="stop-color:#FFF5F0;stop-opacity:1" />
-        </linearGradient>
-        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#D4A5A5" flood-opacity="0.3"/>
-        </filter>
-      </defs>
-      
-      <!-- Background -->
-      <rect width="${width}" height="${height}" fill="url(#bgGradient)"/>
-      
-      <!-- Ticket Card with notches -->
-      <g filter="url(#shadow)">
-        <!-- Main ticket body -->
-        <path d="M 40 30 L ${width-40} 30 L ${width-40} ${height-70} Q ${width-40} ${height-50} ${width-60} ${height-50} L 60 ${height-50} Q 40 ${height-50} 40 ${height-70} Z" 
-              fill="url(#ticketGradient)" stroke="#D4A5A5" stroke-width="2"/>
-        
-        <!-- Top decorative line -->
-        <line x1="60" y1="70" x2="${width-60}" y2="70" stroke="#D4A5A5" stroke-width="2" stroke-dasharray="8,4"/>
-        
-        <!-- Side decorative borders -->
-        <rect x="50" y="80" width="8" height="${height-160}" rx="2" fill="#F5E6E0"/>
-        <rect x="${width-58}" y="80" width="8" height="${height-160}" rx="2" fill="#F5E6E0"/>
-      </g>
-      
-      <!-- Corner decorations -->
-      <text x="70" y="60" font-size="20" fill="#D4A5A5">*</text>
-      <text x="${width-85}" y="60" font-size="20" fill="#D4A5A5">*</text>
-      <text x="70" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
-      <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
-      
-      <!-- Official Ticket Header -->
-      <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355">OFFICIAL INVITATION</text>
-      <text x="${centerX}" y="120" font-size="11" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
-      
-      <!-- Event Title Box -->
-      <rect x="70" y="140" width="${width-140}" height="85" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="1"/>
-      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">We invite you to</text>
-      <text x="${centerX}" y="200" font-size="32" text-anchor="middle" fill="#D4A5A5">Bayan Sulu</text>
-      <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3">April 15, 2026</text>
-      
-      <!-- Guest Name Section -->
-      <rect x="70" y="245" width="${width-140}" height="70" rx="6" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="265" font-size="11" text-anchor="middle" fill="#8B7355">GUEST</text>
-      <text x="${centerX}" y="295" font-size="26" text-anchor="middle" fill="#5a4a4a">${name}</text>
-      
-      <!-- Status Badge -->
-      <rect x="100" y="330" width="${width-200}" height="45" rx="20" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="360" font-size="18" text-anchor="middle" fill="${textColor}">${responseText}</text>
-      
-      ${detailsContent}
-      
-      <!-- Decorative divider -->
-      <line x1="100" y1="545" x2="${width-100}" y2="545" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
-      <text x="${centerX}" y="565" font-size="20" text-anchor="middle" fill="#D4A5A5">~ ~ ~</text>
-      
-      <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355">Please present this at the entrance</text>
-      <text x="${centerX}" y="615" font-size="11" text-anchor="middle" fill="#B399A3">Thank you for your response!</text>
-      
-      <!-- Barcode Section -->
-      <text x="${centerX}" y="670" font-size="10" text-anchor="middle" fill="#8B7355">NO. ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
-      ${barcodePattern}
-      
-      <!-- Bottom text -->
-      <text x="${centerX}" y="${height-65}" font-size="10" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
-    </svg>
-  `;
+  ctx.shadowColor = 'transparent';
+  
+  // Top decorative line
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 4]);
+  ctx.beginPath();
+  ctx.moveTo(60, 70);
+  ctx.lineTo(440, 70);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  // Side borders
+  ctx.fillStyle = '#F5E6E0';
+  ctx.beginPath();
+  ctx.roundRect(50, 80, 8, 630, 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(442, 80, 8, 630, 2);
+  ctx.fill();
+  
+  // Corner decorations
+  ctx.fillStyle = '#D4A5A5';
+  ctx.font = '20px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('*', 70, 60);
+  ctx.fillText('*', 430, 60);
+  ctx.fillText('*', 70, 780);
+  ctx.fillText('*', 430, 780);
+  
+  // Header
+  ctx.fillStyle = '#8B7355';
+  ctx.font = '14px Arial';
+  ctx.fillText('OFFICIAL INVITATION', 250, 100);
+  
+  ctx.fillStyle = '#B399A3';
+  ctx.font = '11px Arial';
+  ctx.fillText('Bayan Sulu 2026', 250, 120);
+  
+  // Event box
+  ctx.fillStyle = '#F5E6E0';
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(70, 140, 360, 85, 8);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = '#8B7355';
+  ctx.font = '16px Arial';
+  ctx.fillText('We invite you to', 250, 170);
+  
+  ctx.fillStyle = '#D4A5A5';
+  ctx.font = 'bold 32px Arial';
+  ctx.fillText('Bayan Sulu', 250, 200);
+  
+  ctx.fillStyle = '#B399A3';
+  ctx.font = '12px Arial';
+  ctx.fillText('April 15, 2026', 250, 220);
+  
+  // Guest box
+  ctx.fillStyle = '#FFFAF0';
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(70, 245, 360, 70, 6);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = '#8B7355';
+  ctx.font = '11px Arial';
+  ctx.fillText('GUEST', 250, 265);
+  
+  ctx.fillStyle = '#5a4a4a';
+  ctx.font = 'bold 26px Arial';
+  ctx.fillText(name, 250, 295);
+  
+  // Status badge
+  const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
+  const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
+  const responseText = willAttend ? '[+] ATTENDING' : '[-] NOT ATTENDING';
+  
+  ctx.fillStyle = responseColor;
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(100, 330, 300, 45, 20);
+  ctx.fill();
+  ctx.stroke();
+  
+  ctx.fillStyle = textColor;
+  ctx.font = 'bold 18px Arial';
+  ctx.fillText(responseText, 250, 360);
+  
+  // Event details
+  if (willAttend) {
+    ctx.fillStyle = '#8B7355';
+    ctx.font = '16px Arial';
+    ctx.fillText('Celebration of Beauty and Joy', 250, 425);
+    
+    ctx.fillStyle = '#D4A5A5';
+    ctx.font = '15px Arial';
+    ctx.fillText('April 15, 2026', 250, 455);
+    
+    ctx.fillStyle = '#8B7355';
+    ctx.font = '12px Arial';
+    ctx.fillText('2GIS: astana/geo/70000001068734198', 250, 485);
+    
+    ctx.font = '13px Arial';
+    ctx.fillText('Get ready for an unforgettable evening!', 250, 515);
+  } else {
+    ctx.fillStyle = '#8B5A45';
+    ctx.font = '14px Arial';
+    ctx.fillText('Unfortunately, you cannot attend', 250, 425);
+    
+    ctx.fillStyle = '#8B7355';
+    ctx.font = '12px Arial';
+    ctx.fillText('Please share the reason and suggest a date', 250, 455);
+    
+    ctx.fillStyle = '#B399A3';
+    ctx.fillText('kaz070318@gmail.com', 250, 485);
+  }
+  
+  // Decorative divider
+  ctx.strokeStyle = '#D4A5A5';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 3]);
+  ctx.beginPath();
+  ctx.moveTo(100, 545);
+  ctx.lineTo(400, 545);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  ctx.fillStyle = '#D4A5A5';
+  ctx.font = '20px Arial';
+  ctx.fillText('~ ~ ~', 250, 565);
+  
+  // Instructions
+  ctx.fillStyle = '#8B7355';
+  ctx.font = '12px Arial';
+  ctx.fillText('Please present this at the entrance', 250, 595);
+  
+  ctx.fillStyle = '#B399A3';
+  ctx.font = '11px Arial';
+  ctx.fillText('Thank you for your response!', 250, 615);
+  
+  // Barcode
+  ctx.fillStyle = '#8B7355';
+  ctx.font = '10px Arial';
+  const ticketNumber = Math.random().toString(36).substr(2, 9).toUpperCase();
+  ctx.fillText('NO. ' + ticketNumber, 250, 670);
+  
+  // Barcode lines
+  ctx.fillStyle = '#8B7355';
+  for (let i = 0; i < 25; i++) {
+    const x = 100 + i * 12;
+    const w = Math.random() > 0.5 ? 5 : 3;
+    ctx.fillRect(x, 690, w, 35);
+  }
+  
+  // Bottom text
+  ctx.fillStyle = '#B399A3';
+  ctx.font = '10px Arial';
+  ctx.fillText('Bayan Sulu 2026', 250, 785);
+  
+  return canvas.toBuffer('image/png');
 }
 
 // SPA Fallback - serve index.html for all non-API routes
