@@ -1,6 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd server && npm install && echo 'SVG fix 04:55'"
-
-[deploy]
-startCommand = "cd server && npm start"
