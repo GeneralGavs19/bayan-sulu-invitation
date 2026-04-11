@@ -5,7 +5,6 @@ import { MongoClient, ObjectId } from 'mongodb';
 import fetch from 'node-fetch';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createCanvas } from 'canvas';
 
 dotenv.config();
 
@@ -268,10 +267,10 @@ app.delete('/admin/responses/:id', async (req, res) => {
   }
 });
 
-// Generate invitation image (PNG)
+// Generate invitation ticket (HTML)
 app.post('/invitations/generate-image', async (req, res) => {
   try {
-    console.log('🎨 Generate image requested');
+    console.log('🎨 Generate ticket requested');
     const { name, willAttend } = req.body;
     console.log(`   Name: ${name}, willAttend: ${willAttend}`);
 
@@ -280,16 +279,16 @@ app.post('/invitations/generate-image', async (req, res) => {
       return res.status(400).json({ error: 'Missing name' });
     }
 
-    // Generate PNG using Canvas
-    console.log('📝 Generating Canvas...');
-    const pngBuffer = await generateInvitationCanvas(name, willAttend);
-    console.log(`✅ PNG generated, size: ${pngBuffer.length} bytes`);
+    // Generate HTML ticket
+    console.log('📝 Generating HTML ticket...');
+    const htmlContent = generateTicketHTML(name, willAttend);
+    console.log(`✅ HTML generated, length: ${htmlContent.length} bytes`);
     
-    res.type('image/png');
-    res.send(pngBuffer);
+    res.type('text/html');
+    res.send(htmlContent);
   } catch (error) {
-    console.error('❌ Image generation error:', error);
-    res.status(500).json({ error: 'Failed to generate image', details: error.message });
+    console.error('❌ Ticket generation error:', error);
+    res.status(500).json({ error: 'Failed to generate ticket', details: error.message });
   }
 });
 
@@ -509,200 +508,147 @@ Bayan Sulu 2026`;
   }
 }
 
-async function generateInvitationCanvas(name, willAttend) {
-  const width = 500;
-  const height = 850;
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext('2d');
-  
-  // Background gradient
-  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-  bgGradient.addColorStop(0, '#F0E6D2');
-  bgGradient.addColorStop(1, '#E8D5C4');
-  ctx.fillStyle = bgGradient;
-  ctx.fillRect(0, 0, width, height);
-  
-  // Ticket shadow/border
-  ctx.shadowColor = 'rgba(212, 165, 165, 0.3)';
-  ctx.shadowBlur = 8;
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = 4;
-  
-  // Main ticket body
-  ctx.fillStyle = '#FFFAF0';
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(40, 30, 420, 730, 10);
-  ctx.fill();
-  ctx.stroke();
-  
-  ctx.shadowColor = 'transparent';
-  
-  // Top decorative line
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([8, 4]);
-  ctx.beginPath();
-  ctx.moveTo(60, 70);
-  ctx.lineTo(440, 70);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  
-  // Side borders
-  ctx.fillStyle = '#F5E6E0';
-  ctx.beginPath();
-  ctx.roundRect(50, 80, 8, 630, 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.roundRect(442, 80, 8, 630, 2);
-  ctx.fill();
-  
-  // Corner decorations
-  ctx.fillStyle = '#D4A5A5';
-  ctx.font = '20px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText('*', 70, 60);
-  ctx.fillText('*', 430, 60);
-  ctx.fillText('*', 70, 780);
-  ctx.fillText('*', 430, 780);
-  
-  // Header
-  ctx.fillStyle = '#8B7355';
-  ctx.font = '14px Arial';
-  ctx.fillText('OFFICIAL INVITATION', 250, 100);
-  
-  ctx.fillStyle = '#B399A3';
-  ctx.font = '11px Arial';
-  ctx.fillText('Bayan Sulu 2026', 250, 120);
-  
-  // Event box
-  ctx.fillStyle = '#F5E6E0';
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.roundRect(70, 140, 360, 85, 8);
-  ctx.fill();
-  ctx.stroke();
-  
-  ctx.fillStyle = '#8B7355';
-  ctx.font = '16px Arial';
-  ctx.fillText('We invite you to', 250, 170);
-  
-  ctx.fillStyle = '#D4A5A5';
-  ctx.font = 'bold 32px Arial';
-  ctx.fillText('Bayan Sulu', 250, 200);
-  
-  ctx.fillStyle = '#B399A3';
-  ctx.font = '12px Arial';
-  ctx.fillText('April 15, 2026', 250, 220);
-  
-  // Guest box
-  ctx.fillStyle = '#FFFAF0';
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(70, 245, 360, 70, 6);
-  ctx.fill();
-  ctx.stroke();
-  
-  ctx.fillStyle = '#8B7355';
-  ctx.font = '11px Arial';
-  ctx.fillText('GUEST', 250, 265);
-  
-  ctx.fillStyle = '#5a4a4a';
-  ctx.font = 'bold 26px Arial';
-  ctx.fillText(name, 250, 295);
-  
-  // Status badge
+function generateTicketHTML(name, willAttend) {
+  const responseText = willAttend ? 'ATTENDING' : 'NOT ATTENDING';
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
-  const responseText = willAttend ? '[+] ATTENDING' : '[-] NOT ATTENDING';
-  
-  ctx.fillStyle = responseColor;
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.roundRect(100, 330, 300, 45, 20);
-  ctx.fill();
-  ctx.stroke();
-  
-  ctx.fillStyle = textColor;
-  ctx.font = 'bold 18px Arial';
-  ctx.fillText(responseText, 250, 360);
-  
-  // Event details
-  if (willAttend) {
-    ctx.fillStyle = '#8B7355';
-    ctx.font = '16px Arial';
-    ctx.fillText('Celebration of Beauty and Joy', 250, 425);
-    
-    ctx.fillStyle = '#D4A5A5';
-    ctx.font = '15px Arial';
-    ctx.fillText('April 15, 2026', 250, 455);
-    
-    ctx.fillStyle = '#8B7355';
-    ctx.font = '12px Arial';
-    ctx.fillText('2GIS: astana/geo/70000001068734198', 250, 485);
-    
-    ctx.font = '13px Arial';
-    ctx.fillText('Get ready for an unforgettable evening!', 250, 515);
-  } else {
-    ctx.fillStyle = '#8B5A45';
-    ctx.font = '14px Arial';
-    ctx.fillText('Unfortunately, you cannot attend', 250, 425);
-    
-    ctx.fillStyle = '#8B7355';
-    ctx.font = '12px Arial';
-    ctx.fillText('Please share the reason and suggest a date', 250, 455);
-    
-    ctx.fillStyle = '#B399A3';
-    ctx.fillText('kaz070318@gmail.com', 250, 485);
-  }
-  
-  // Decorative divider
-  ctx.strokeStyle = '#D4A5A5';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([6, 3]);
-  ctx.beginPath();
-  ctx.moveTo(100, 545);
-  ctx.lineTo(400, 545);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  
-  ctx.fillStyle = '#D4A5A5';
-  ctx.font = '20px Arial';
-  ctx.fillText('~ ~ ~', 250, 565);
-  
-  // Instructions
-  ctx.fillStyle = '#8B7355';
-  ctx.font = '12px Arial';
-  ctx.fillText('Please present this at the entrance', 250, 595);
-  
-  ctx.fillStyle = '#B399A3';
-  ctx.font = '11px Arial';
-  ctx.fillText('Thank you for your response!', 250, 615);
-  
-  // Barcode
-  ctx.fillStyle = '#8B7355';
-  ctx.font = '10px Arial';
   const ticketNumber = Math.random().toString(36).substr(2, 9).toUpperCase();
-  ctx.fillText('NO. ' + ticketNumber, 250, 670);
   
-  // Barcode lines
-  ctx.fillStyle = '#8B7355';
-  for (let i = 0; i < 25; i++) {
-    const x = 100 + i * 12;
-    const w = Math.random() > 0.5 ? 5 : 3;
-    ctx.fillRect(x, 690, w, 35);
-  }
+  const attendingContent = `
+    <p><strong>Celebration of Beauty and Joy</strong></p>
+    <p style="color: #D4A5A5; font-size: 18px;">April 15, 2026</p>
+    <p>2GIS: astana/geo/70000001068734198</p>
+    <p>Get ready for an unforgettable evening!</p>`;
   
-  // Bottom text
-  ctx.fillStyle = '#B399A3';
-  ctx.font = '10px Arial';
-  ctx.fillText('Bayan Sulu 2026', 250, 785);
+  const notAttendingContent = `
+    <p style="color: #8B5A45;"><strong>Unfortunately, you cannot attend</strong></p>
+    <p>Please share the reason and suggest a date</p>
+    <p style="color: #B399A3;">kaz070318@gmail.com</p>`;
   
-  return canvas.toBuffer('image/png');
+  const detailsContent = willAttend ? attendingContent : notAttendingContent;
+  
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitation - ${name}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #F0E6D2 0%, #E8D5C4 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .ticket {
+      background: #FFFAF0;
+      border-radius: 12px;
+      padding: 40px 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 2px solid #D4A5A5;
+    }
+    .header { color: #8B7355; margin-bottom: 20px; }
+    .header h1 { font-size: 18px; margin-bottom: 5px; }
+    .header p { color: #B399A3; font-size: 12px; }
+    .event-box {
+      background: #F5E6E0;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #D4A5A5;
+    }
+    .event-box h2 { color: #D4A5A5; font-size: 32px; margin-bottom: 5px; }
+    .event-box p { color: #8B7355; font-size: 14px; }
+    .guest-box {
+      background: #FFFAF0;
+      border: 2px solid #D4A5A5;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .guest-box .label { color: #8B7355; font-size: 11px; margin-bottom: 5px; }
+    .guest-box .name { color: #5a4a4a; font-size: 26px; font-weight: bold; }
+    .status-badge {
+      background: ${responseColor};
+      border: 2px solid #D4A5A5;
+      border-radius: 20px;
+      padding: 12px 30px;
+      display: inline-block;
+      margin: 15px 0;
+      color: ${textColor};
+      font-weight: bold;
+    }
+    .details { margin: 20px 0; color: #8B7355; line-height: 1.6; }
+    .divider { border-top: 2px dashed #D4A5A5; margin: 20px 0; padding-top: 10px; color: #D4A5A5; font-size: 20px; }
+    .instructions { color: #8B7355; font-size: 12px; margin-top: 20px; }
+    .barcode {
+      margin: 20px 0;
+      padding: 10px;
+      font-family: monospace;
+      color: #8B7355;
+    }
+    .barcode-lines { margin-top: 10px; }
+    .barcode-lines span {
+      display: inline-block;
+      width: 4px;
+      height: 30px;
+      background: #8B7355;
+      margin: 0 1px;
+    }
+    .footer { color: #B399A3; font-size: 10px; margin-top: 20px; }
+    @media print {
+      body { background: #F0E6D2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket">
+    <div class="header">
+      <h1>OFFICIAL INVITATION</h1>
+      <p>Bayan Sulu 2026</p>
+    </div>
+    
+    <div class="event-box">
+      <p>We invite you to</p>
+      <h2>Bayan Sulu</h2>
+      <p>April 15, 2026</p>
+    </div>
+    
+    <div class="guest-box">
+      <div class="label">GUEST</div>
+      <div class="name">${name}</div>
+    </div>
+    
+    <div class="status-badge">${responseText}</div>
+    
+    <div class="details">
+      ${detailsContent}
+    </div>
+    
+    <div class="divider">~ ~ ~</div>
+    
+    <div class="instructions">
+      <p>Please present this at the entrance</p>
+      <p style="color: #B399A3;">Thank you for your response!</p>
+    </div>
+    
+    <div class="barcode">
+      NO. ${ticketNumber}
+      <div class="barcode-lines">
+        ${Array.from({length: 25}, () => `<span style="width:${Math.random() > 0.5 ? 5 : 3}px"></span>`).join('')}
+      </div>
+    </div>
+    
+    <div class="footer">Bayan Sulu 2026</div>
+  </div>
+</body>
+</html>`;
 }
 
 // SPA Fallback - serve index.html for all non-API routes

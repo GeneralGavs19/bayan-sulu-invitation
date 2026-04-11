@@ -232,8 +232,8 @@
           </div>
 
           <div class="actions">
-            <button @click="downloadInvitationPNG" class="btn btn-secondary">
-              🖼️ Скачать как картинку
+            <button @click="downloadInvitationTicket" class="btn btn-secondary">
+              🎫 Скачать приглашение
             </button>
             <button @click="shareLink" class="btn btn-secondary">
               📤 Поделиться ссылкой
@@ -403,33 +403,30 @@ export default {
       document.body.removeChild(element);
     },
 
-    async downloadInvitationPNG() {
+    async downloadInvitationTicket() {
       try {
         const response = await axios.post(
           `${this.apiUrl}/invitations/generate-image`,
           {
             name: this.formData.name,
             willAttend: this.formData.willAttend
-          },
-          { responseType: 'blob' }
+          }
         );
 
-        // Determine file extension based on content type
-        const contentType = response.headers['content-type'] || '';
-        const isSvg = contentType.includes('svg') || contentType.includes('xml');
-        const extension = isSvg ? 'svg' : 'png';
-        
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        // Create HTML file for download
+        const htmlContent = response.data;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `invitation-${this.formData.name.replace(/\\s+/g, '_')}.${extension}`);
+        link.setAttribute('download', `invitation-${this.formData.name.replace(/\s+/g, '_')}.html`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       } catch (error) {
         this.error = 'Ошибка скачивания: ' + (error.response?.data?.message || error.message);
-        console.error('Download PNG error:', error);
+        console.error('Download ticket error:', error);
       }
     },
 
