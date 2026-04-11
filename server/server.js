@@ -528,7 +528,7 @@ Bayan Sulu 2026`;
 }
 
 function generateInvitationSVG(name, willAttend) {
-  const responseText = willAttend ? '✓ ПРИДУ' : '✗ НЕ ПРИДУ';
+  const responseText = willAttend ? '[+] PRIDU' : '[-] NE PRIDU';
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
   
@@ -583,45 +583,39 @@ function generateInvitationSVG(name, willAttend) {
       <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
       
       <!-- Official Ticket Header -->
-      <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" letter-spacing="3">ОФИЦИАЛЬНОЕ ПРИГЛАШЕНИЕ</text>
-      <text x="${centerX}" y="120" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif" font-style="italic">OFFICIAL INVITATION</text>
+      <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355" letter-spacing="3">OFITSIALNOE PRIGLASHENIE</text>
+      <text x="${centerX}" y="120" font-size="11" text-anchor="middle" fill="#B399A3" font-style="italic">OFFICIAL INVITATION</text>
       
       <!-- Event Title Box -->
       <rect x="70" y="140" width="${width-140}" height="85" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="1"/>
-      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Приглашаем Вас на</text>
-      <text x="${centerX}" y="200" font-size="32" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold" letter-spacing="2">Баян Сулу</text>
-      <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Bayan Sulu 2026</text>
+      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">Priglaшаем Вас на</text>
+      <text x="${centerX}" y="200" font-size="32" text-anchor="middle" fill="#D4A5A5" font-weight="bold" letter-spacing="2">Bayan Sulu</text>
+      <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
       
       <!-- Guest Name Section -->
       <rect x="70" y="245" width="${width-140}" height="70" rx="6" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="265" font-size="11" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">ГОСТЬ / GUEST</text>
-      <text x="${centerX}" y="295" font-size="26" text-anchor="middle" fill="#5a4a4a" font-family="Arial, sans-serif" font-weight="bold">${name}</text>
+      <text x="${centerX}" y="265" font-size="11" text-anchor="middle" fill="#8B7355">GOST / GUEST</text>
+      <text x="${centerX}" y="295" font-size="26" text-anchor="middle" fill="#5a4a4a" font-weight="bold">${name}</text>
       
       <!-- Status Badge -->
       <rect x="100" y="330" width="${width-200}" height="45" rx="20" fill="${responseColor}" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="360" font-size="18" text-anchor="middle" fill="${textColor}" font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">${responseText}</text>
+      <text x="${centerX}" y="360" font-size="18" text-anchor="middle" fill="${textColor}" font-weight="bold" letter-spacing="2">${responseText}</text>
       
-      <!-- Event Details Box -->
-      <rect x="70" y="395" width="${width-140}" height="140" rx="8" fill="#FFF8F5" stroke="#E8D5C4" stroke-width="1" stroke-dasharray="4,2"/>
-      <text x="${centerX}" y="425" font-size="16" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif" font-weight="bold">🎊 Праздник красоты и радости</text>
-      <text x="${centerX}" y="455" font-size="15" text-anchor="middle" fill="#D4A5A5" font-family="Georgia, serif" font-weight="bold">📅 15 апреля 2026</text>
-      <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">📍 2GIS: astana/geo/70000001068734198</text>
-      <text x="${centerX}" y="515" font-size="13" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">✨ Приготовьтесь к незабываемому вечеру!</text>
+      ${detailsContent}
       
       <!-- Decorative divider -->
       <line x1="100" y1="545" x2="${width-100}" y2="545" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
       <text x="${centerX}" y="565" font-size="20" text-anchor="middle" fill="#D4A5A5">~ ~ ~</text>
       
-      <!-- Instructions -->
-      <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355" font-family="Georgia, serif">Предъявите это приглашение при входе</text>
-      <text x="${centerX}" y="615" font-size="11" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Please present this invitation at the entrance</text>
+      <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355">Predyavite eto priglashenie pri vhode</text>
+      <text x="${centerX}" y="615" font-size="11" text-anchor="middle" fill="#B399A3">Please present this invitation at the entrance</text>
       
       <!-- Barcode Section -->
-      <text x="${centerX}" y="670" font-size="10" text-anchor="middle" fill="#8B7355" font-family="monospace">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
+      <text x="${centerX}" y="670" font-size="10" text-anchor="middle" fill="#8B7355">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
       ${barcodePattern}
       
       <!-- Bottom text -->
-      <text x="${centerX}" y="${height-65}" font-size="10" text-anchor="middle" fill="#B399A3" font-family="Georgia, serif">Баян Сулу 2026 • Благодарим за ответ!</text>
+      <text x="${centerX}" y="${height-65}" font-size="10" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026 • Blagodarim za otvet!</text>
     </svg>
   `;
 }
