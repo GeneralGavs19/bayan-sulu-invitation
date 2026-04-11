@@ -532,7 +532,7 @@ Bayan Sulu 2026`;
 }
 
 function generateInvitationSVG(name, willAttend) {
-  const responseText = willAttend ? '[+] PRIDU' : '[-] NE PRIDU';
+  const responseText = willAttend ? '[+] ATTENDING' : '[-] NOT ATTENDING';
   const responseColor = willAttend ? '#B4E7D1' : '#F4D4C8';
   const textColor = willAttend ? '#2d5a4e' : '#8B5A45';
   
@@ -543,14 +543,14 @@ function generateInvitationSVG(name, willAttend) {
   
   // Event details based on attendance
   const attendingDetails = `
-      <text x="${centerX}" y="425" font-size="16" text-anchor="middle" fill="#8B7355">Prazdnik krasoty i radosti</text>
-      <text x="${centerX}" y="455" font-size="15" text-anchor="middle" fill="#D4A5A5">15 aprelya 2026 goda</text>
+      <text x="${centerX}" y="425" font-size="16" text-anchor="middle" fill="#8B7355">Celebration of Beauty and Joy</text>
+      <text x="${centerX}" y="455" font-size="15" text-anchor="middle" fill="#D4A5A5">April 15, 2026</text>
       <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#8B7355">2GIS: astana/geo/70000001068734198</text>
-      <text x="${centerX}" y="515" font-size="13" text-anchor="middle" fill="#8B7355">Prigotovtes k nezabyvaemomu vecheru!</text>`;
+      <text x="${centerX}" y="515" font-size="13" text-anchor="middle" fill="#8B7355">Get ready for an unforgettable evening!</text>`;
   
   const notAttendingDetails = `
-      <text x="${centerX}" y="425" font-size="14" text-anchor="middle" fill="#8B5A45">K sozhaleniyu, Vy ne smozhete prisutstvovat</text>
-      <text x="${centerX}" y="455" font-size="12" text-anchor="middle" fill="#8B7355">Soobshchite prichinu i predlozhite datu</text>
+      <text x="${centerX}" y="425" font-size="14" text-anchor="middle" fill="#8B5A45">Unfortunately, you cannot attend</text>
+      <text x="${centerX}" y="455" font-size="12" text-anchor="middle" fill="#8B7355">Please share the reason and suggest a date</text>
       <text x="${centerX}" y="485" font-size="12" text-anchor="middle" fill="#B399A3">kaz070318@gmail.com</text>`;
   
   const detailsContent = willAttend ? attendingDetails : notAttendingDetails;
@@ -601,18 +601,18 @@ function generateInvitationSVG(name, willAttend) {
       <text x="${width-85}" y="${height-80}" font-size="20" fill="#D4A5A5">*</text>
       
       <!-- Official Ticket Header -->
-      <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355">OFITSIALNOE PRIGLASHENIE</text>
-      <text x="${centerX}" y="120" font-size="11" text-anchor="middle" fill="#B399A3">OFFICIAL INVITATION</text>
+      <text x="${centerX}" y="100" font-size="14" text-anchor="middle" fill="#8B7355">OFFICIAL INVITATION</text>
+      <text x="${centerX}" y="120" font-size="11" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
       
       <!-- Event Title Box -->
       <rect x="70" y="140" width="${width-140}" height="85" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="1"/>
-      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">Priglashaem Vas na</text>
+      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">We invite you to</text>
       <text x="${centerX}" y="200" font-size="32" text-anchor="middle" fill="#D4A5A5">Bayan Sulu</text>
-      <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
+      <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3">April 15, 2026</text>
       
       <!-- Guest Name Section -->
       <rect x="70" y="245" width="${width-140}" height="70" rx="6" fill="#FFFAF0" stroke="#D4A5A5" stroke-width="2"/>
-      <text x="${centerX}" y="265" font-size="11" text-anchor="middle" fill="#8B7355">GOST / GUEST</text>
+      <text x="${centerX}" y="265" font-size="11" text-anchor="middle" fill="#8B7355">GUEST</text>
       <text x="${centerX}" y="295" font-size="26" text-anchor="middle" fill="#5a4a4a">${name}</text>
       
       <!-- Status Badge -->
@@ -625,15 +625,15 @@ function generateInvitationSVG(name, willAttend) {
       <line x1="100" y1="545" x2="${width-100}" y2="545" stroke="#D4A5A5" stroke-width="1" stroke-dasharray="6,3"/>
       <text x="${centerX}" y="565" font-size="20" text-anchor="middle" fill="#D4A5A5">~ ~ ~</text>
       
-      <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355">Predyavite eto priglashenie pri vhode</text>
-      <text x="${centerX}" y="615" font-size="11" text-anchor="middle" fill="#B399A3">Please present this invitation at the entrance</text>
+      <text x="${centerX}" y="595" font-size="12" text-anchor="middle" fill="#8B7355">Please present this at the entrance</text>
+      <text x="${centerX}" y="615" font-size="11" text-anchor="middle" fill="#B399A3">Thank you for your response!</text>
       
       <!-- Barcode Section -->
-      <text x="${centerX}" y="670" font-size="10" text-anchor="middle" fill="#8B7355">№ ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
+      <text x="${centerX}" y="670" font-size="10" text-anchor="middle" fill="#8B7355">NO. ${Math.random().toString(36).substr(2, 9).toUpperCase()}</text>
       ${barcodePattern}
       
       <!-- Bottom text -->
-      <text x="${centerX}" y="${height-65}" font-size="10" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026 • Blagodarim za otvet!</text>
+      <text x="${centerX}" y="${height-65}" font-size="10" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
     </svg>
   `;
 }
