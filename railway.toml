@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd server && npm install && echo 'SMTP build 14:38'"
+
+[deploy]
+startCommand = "cd server && npm start"
