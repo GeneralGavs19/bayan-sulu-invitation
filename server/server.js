@@ -588,7 +588,7 @@ function generateInvitationSVG(name, willAttend) {
       
       <!-- Event Title Box -->
       <rect x="70" y="140" width="${width-140}" height="85" rx="8" fill="#F5E6E0" stroke="#D4A5A5" stroke-width="1"/>
-      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">Priglaшаем Вас на</text>
+      <text x="${centerX}" y="170" font-size="16" text-anchor="middle" fill="#8B7355">Priglashaem Vas na</text>
       <text x="${centerX}" y="200" font-size="32" text-anchor="middle" fill="#D4A5A5" font-weight="bold" letter-spacing="2">Bayan Sulu</text>
       <text x="${centerX}" y="220" font-size="12" text-anchor="middle" fill="#B399A3">Bayan Sulu 2026</text>
       
