@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { MongoClient, ObjectId } from 'mongodb';
-import fetch from 'node-fetch';
+import nodemailer from 'nodemailer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -45,61 +45,75 @@ async function connectDB() {
   }
 }
 
-// Helper function to send email via Resend
-async function sendEmailViaResend(to, subject, html, text) {
+// Create SMTP transporter
+function createTransporter() {
+  const service = process.env.SMTP_SERVICE || 'gmail';
+  const host = process.env.SMTP_HOST;
+  const port = process.env.SMTP_PORT;
+  const user = process.env.SMTP_USER || process.env.EMAIL_FROM;
+  const pass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
+  
+  console.log('📧 Creating SMTP transporter...');
+  console.log('   Service:', service);
+  console.log('   Host:', host || 'default');
+  console.log('   User:', user ? '✓ Present' : '✗ Missing');
+  console.log('   Pass:', pass ? '✓ Present' : '✗ Missing');
+  
+  const config = {
+    service: service,
+    auth: {
+      user: user,
+      pass: pass
+    }
+  };
+  
+  // Allow custom host/port for other providers
+  if (host) {
+    config.host = host;
+    config.port = port || 587;
+    config.secure = port === 465;
+  }
+  
+  return nodemailer.createTransporter(config);
+}
+
+// Helper function to send email via SMTP
+async function sendEmailViaSMTP(to, subject, html, text) {
   try {
-    console.log('📧 Attempting to send email...');
+    console.log('📧 Attempting to send email via SMTP...');
     console.log('   To:', to);
     console.log('   Subject:', subject);
-    console.log('   API Key:', process.env.RESEND_API_KEY ? '✓ Present' : '✗ Missing');
-    console.log('   From:', process.env.EMAIL_FROM || 'noreply@resend.dev');
 
-    const payload = {
-      from: process.env.EMAIL_FROM || 'noreply@resend.dev',
+    const transporter = createTransporter();
+    
+    // Verify transporter
+    console.log('🔍 Verifying SMTP connection...');
+    await transporter.verify();
+    console.log('✅ SMTP connection verified');
+
+    const from = process.env.SMTP_USER || process.env.EMAIL_FROM || 'bayan-sulu@invitation.com';
+    
+    const mailOptions = {
+      from: `"Bayan Sulu Invitation" <${from}>`,
       to: to,
       subject: subject,
       text: text,
       html: html,
-      reply_to: process.env.EMAIL_FROM || 'noreply@resend.dev'
+      replyTo: from
     };
 
-    console.log('📤 Sending POST to Resend API...');
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    console.log('   Response Status:', response.status);
-    console.log('   Response Data:', JSON.stringify(data, null, 2));
-
-    if (!response.ok) {
-      console.error('❌ Email send failed with status', response.status);
-      console.error('   Error details:', data);
-      
-      // Check for common Resend errors
-      if (data.message && data.message.includes('domain')) {
-        throw new Error(`Resend domain error: ${data.message}. On free plan, you can only send to your own verified email.`);
-      }
-      if (data.message && data.message.includes('not authorized')) {
-        throw new Error(`Resend authorization error: ${data.message}. Check your API key.`);
-      }
-      if (response.status === 403) {
-        throw new Error(`Resend 403 Forbidden: Email not sent. Free plan limitation - can only send to verified domain or own email.`);
-      }
-      
-      throw new Error(`Email failed: ${data.message || response.statusText}`);
-    }
-
-    console.log('✅ Email sent successfully. ID:', data.id);
-    return data;
+    console.log('📤 Sending email...');
+    const info = await transporter.sendMail(mailOptions);
+    
+    console.log('✅ Email sent successfully!');
+    console.log('   Message ID:', info.messageId);
+    console.log('   Accepted:', info.accepted);
+    console.log('   Rejected:', info.rejected);
+    
+    return { id: info.messageId, accepted: info.accepted, rejected: info.rejected };
   } catch (error) {
     console.error('❌ Email sending error:', error.message);
-    throw error;
+    throw new Error(`SMTP Error: ${error.message}. Check your SMTP credentials in environment variables.`);
   }
 }
 
@@ -129,7 +143,7 @@ app.post('/admin/test-email', async (req, res) => {
     
     const text = `Test Email from Bayan Sulu Invitation. This is a test email sent at ${new Date().toISOString()}. If you received this, email delivery is working!`;
     
-    const result = await sendEmailViaResend(email, 'Test Email - Bayan Sulu', html, text);
+    const result = await sendEmailViaSMTP(email, 'Test Email - Bayan Sulu', html, text);
     
     res.json({ 
       success: true, 
@@ -193,7 +207,7 @@ app.post('/invitations/submit', async (req, res) => {
       try {
         const htmlContent = generateInvitationHTML(name, willAttend);
         const textContent = generateInvitationText(name, willAttend);
-        await sendEmailViaResend(
+        await sendEmailViaSMTP(
           email,
           'Приглашение на Баян Сулу 2026 | Bayan Sulu Invitation',
           htmlContent,
