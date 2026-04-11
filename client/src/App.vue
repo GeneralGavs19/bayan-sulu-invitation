@@ -61,6 +61,32 @@
           </div>
         </div>
 
+        <!-- Email Test Section -->
+        <div class="admin-email-test" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 20px 0;">
+          <h4>📧 Тест отправки email</h4>
+          <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+            Введите email для проверки доставки писем
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input 
+              v-model="testEmailAddress" 
+              type="email" 
+              placeholder="test@example.com"
+              style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+            />
+            <button 
+              @click="testEmailSending" 
+              :disabled="emailTestLoading"
+              style="padding: 8px 15px; background: #D4A5A5; color: white; border: none; border-radius: 4px; cursor: pointer;"
+            >
+              {{ emailTestLoading ? 'Отправка...' : 'Отправить тест' }}
+            </button>
+          </div>
+          <div v-if="emailTestResult" :style="{ marginTop: '10px', padding: '10px', borderRadius: '4px', fontSize: '14px', background: emailTestSuccess ? '#d4edda' : '#f8d7da', color: emailTestSuccess ? '#155724' : '#721c24' }">
+            {{ emailTestResult }}
+          </div>
+        </div>
+
         <div class="admin-responses">
           <div class="admin-responses-header">
             <h3>Все ответы гостей:</h3>
@@ -283,7 +309,12 @@ export default {
         total: 0,
         attending: 0,
         notAttending: 0
-      }
+      },
+      // Email test
+      testEmailAddress: '',
+      emailTestLoading: false,
+      emailTestResult: '',
+      emailTestSuccess: false
     };
   },
   mounted() {
@@ -481,6 +512,33 @@ export default {
       } catch (error) {
         console.error('Delete all error:', error);
         this.error = 'Ошибка удаления всех ответов';
+      }
+    },
+
+    async testEmailSending() {
+      if (!this.testEmailAddress) {
+        this.emailTestResult = 'Введите email';
+        this.emailTestSuccess = false;
+        return;
+      }
+
+      this.emailTestLoading = true;
+      this.emailTestResult = '';
+
+      try {
+        const response = await axios.post(`${this.apiUrl}/admin/test-email`, {
+          email: this.testEmailAddress
+        });
+
+        this.emailTestResult = '✅ Тестовое письмо отправлено! Проверьте почту (включая Спам)';
+        this.emailTestSuccess = true;
+        this.testEmailAddress = '';
+      } catch (error) {
+        console.error('Email test error:', error);
+        this.emailTestResult = '❌ Ошибка: ' + (error.response?.data?.details || error.response?.data?.error || error.message);
+        this.emailTestSuccess = false;
+      } finally {
+        this.emailTestLoading = false;
       }
     },
 

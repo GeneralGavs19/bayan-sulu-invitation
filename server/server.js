@@ -97,6 +97,42 @@ app.get('/health', (req, res) => {
   res.json({ status: 'Server is running' });
 });
 
+// Test email sending endpoint
+app.post('/admin/test-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    console.log('🧪 Testing email to:', email);
+    
+    // Simple test email
+    const html = `
+      <h1>Test Email from Bayan Sulu Invitation</h1>
+      <p>This is a test email sent at ${new Date().toISOString()}</p>
+      <p>If you received this, email delivery is working!</p>
+    `;
+    
+    const text = `Test Email from Bayan Sulu Invitation. This is a test email sent at ${new Date().toISOString()}. If you received this, email delivery is working!`;
+    
+    const result = await sendEmailViaResend(email, 'Test Email - Bayan Sulu', html, text);
+    
+    res.json({ 
+      success: true, 
+      message: 'Test email sent successfully',
+      emailId: result.id 
+    });
+  } catch (error) {
+    console.error('❌ Test email failed:', error.message);
+    res.status(500).json({ 
+      error: 'Failed to send test email', 
+      details: error.message 
+    });
+  }
+});
+
 // Admin login
 app.post('/admin/login', (req, res) => {
   const { email, password } = req.body;
