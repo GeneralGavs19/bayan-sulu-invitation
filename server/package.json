@@ -1,7 +1,7 @@
 {
   "name": "invitation-server",
-  "version": "1.0.0",
-  "description": "Backend for invitation website",
+  "version": "1.0.1",
+  "description": "Backend for invitation website - SVG fix v3",
   "main": "server.js",
   "type": "module",
   "engines": {
