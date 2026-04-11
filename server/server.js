@@ -75,11 +75,23 @@ async function sendEmailViaResend(to, subject, html, text) {
 
     const data = await response.json();
     console.log('   Response Status:', response.status);
-    console.log('   Response Data:', JSON.stringify(data));
+    console.log('   Response Data:', JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error('❌ Email send failed with status', response.status);
       console.error('   Error details:', data);
+      
+      // Check for common Resend errors
+      if (data.message && data.message.includes('domain')) {
+        throw new Error(`Resend domain error: ${data.message}. On free plan, you can only send to your own verified email.`);
+      }
+      if (data.message && data.message.includes('not authorized')) {
+        throw new Error(`Resend authorization error: ${data.message}. Check your API key.`);
+      }
+      if (response.status === 403) {
+        throw new Error(`Resend 403 Forbidden: Email not sent. Free plan limitation - can only send to verified domain or own email.`);
+      }
+      
       throw new Error(`Email failed: ${data.message || response.statusText}`);
     }
 

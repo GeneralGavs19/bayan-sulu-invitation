@@ -64,6 +64,11 @@
         <!-- Email Test Section -->
         <div class="admin-email-test" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 20px 0;">
           <h4>📧 Тест отправки email</h4>
+          <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 10px; margin-bottom: 15px; font-size: 12px; color: #856404;">
+            <strong>⚠️ Ограничение бесплатного плана Resend:</strong><br>
+            На бесплатном тарифе можно отправлять только на <strong>свой email</strong> или на домены, которые вы верифицировали.<br>
+            Если тест не приходит — это нормальное ограничение Resend.
+          </div>
           <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
             Введите email для проверки доставки писем
           </p>
@@ -247,7 +252,10 @@
               <template v-if="formData.willAttend">
                 <p class="attending-response">✓ ВЫ ПОДТВЕРДИЛИ СВОЕ УЧАСТИЕ</p>
                 <p>Приглашение отправлено на {{ formData.email }}</p>
-                <p style="color: #B399A3; font-size: 12px; margin-top: 10px; font-style: italic;">⚠️ Письмо может попасть в спам — проверьте папку "Спам" / Spam</p>
+                <p style="color: #B399A3; font-size: 12px; margin-top: 10px; font-style: italic;">
+                  ⚠️ Письмо может попасть в спам — проверьте папку "Спам" / Spam<br>
+                  <span style="color: #d4a5a5;">(На бесплатном плане email может не дойти до некоторых адресов)</span>
+                </p>
               </template>
               <template v-else>
                 <p class="not-attending-response">✗ ВЫ СООБЩИЛИ О НЕВОЗМОЖНОСТИ ПРИЕХАТЬ</p>
@@ -559,6 +567,7 @@ export default {
            <p>Спасибо за ответ!<br>Приглашение отправлено на ${this.formData.email}</p>
            <div class="details" style="margin-top: 20px;">
              <p style="margin: 5px 0; font-size: 12px; color: #B399A3; font-style: italic;">⚠️ Проверьте папку "Спам" / Spam</p>
+             <p style="margin: 5px 0; font-size: 11px; color: #d4a5a5; font-style: italic;">(На бесплатном плане email может не дойти до некоторых адресов)</p>
            </div>`
         : `<p class="status-text not-attending">✗ ВЫ СООБЩИЛИ О НЕВОЗМОЖНОСТИ ПРИЕХАТЬ</p>
            <p>Ваш ответ принят<br>Your response has been recorded</p>`;
